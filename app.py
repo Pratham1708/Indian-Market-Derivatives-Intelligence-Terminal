@@ -4,6 +4,8 @@
 Institutional AI-Assisted Market Intelligence & Probabilistic Decision Support System.
 Integrates OHLCV analytics, technical indicators, ML intelligence, options analytics,
 derivatives sentiment, backtesting, and portfolio intelligence.
+
+Phase 5: ML Signal Engine, AI Recommendation Narrator, Executive Summary V2.
 """
 
 import streamlit as st
@@ -25,6 +27,7 @@ from visualizations.trend_cards import render_signal_card
 # Phase 2
 from src.analytics.scanner import scan_market, calculate_breadth, classify_setup
 from src.data.universe import get_all_sectors
+from src.analytics.trade_quality import compute_trade_quality_score
 
 # Phase 3
 from src.analytics.ml_models import detect_anomalies
@@ -37,6 +40,14 @@ from src.analytics.advanced_breadth import compute_advanced_breadth, generate_br
 from src.analytics.options_intelligence import compute_options_intelligence
 from src.analytics.derivatives_sentiment import compute_derivatives_sentiment
 from src.analytics.backtesting import backtest_setup
+
+# Phase 5
+from src.analytics.ml_signal_engine import ml_generate_signal
+from src.analytics.llm_recommendation_engine import (
+    build_intelligence_context,
+    get_recommendation,
+)
+from src.visualizations.executive_summary_v2 import render_executive_summary_v2
 
 # ── Page configuration & CSS ──────────────────────────────────────────────
 st.set_page_config(
@@ -82,8 +93,28 @@ if mode == "Single Stock Analysis":
     else:
         ticker = prefix.upper().strip()
     hist_period = st.sidebar.selectbox("Historical Period", ["1mo", "3mo", "6mo", "1y", "2y"], index=3)
+
+    # Phase 5: AI Narrator settings
+    st.sidebar.markdown("---")
+    st.sidebar.markdown("### 🤖 AI Narrator")
+    ai_provider = st.sidebar.selectbox(
+        "LLM Provider",
+        ["None (Template)", "Gemini", "OpenAI", "Claude"],
+        index=0,
+        help="Select an LLM provider for AI-powered narratives. 'None' uses high-quality templates (free, no API key)."
+    )
+    ai_api_key = ""
+    if ai_provider != "None (Template)":
+        ai_api_key = st.sidebar.text_input(
+            f"{ai_provider} API Key",
+            type="password",
+            help=f"Enter your {ai_provider} API key, or set it in a .env file."
+        )
+
 else:
     hist_period = st.sidebar.selectbox("Scan Period", ["1mo", "3mo", "6mo", "1y", "2y"], index=2)
+    ai_provider = "None (Template)"
+    ai_api_key = ""
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Built with ❤️ using Streamlit & Python")
@@ -117,14 +148,10 @@ def run_single_stock_analysis(ticker, hist_period):
         st.stop()
 
     indicators_df = compute_all_indicators(hist_df)
-    signal_info = generate_signals(indicators_df)
     setup = classify_setup(indicators_df)
     latest = indicators_df.iloc[-1]
 
-    # ── Executive Summary ────────────────────────────────────────────────
-    st.subheader("📋 Institutional Executive Summary")
-
-    # Compute all intelligence in one pass
+    # ── Compute all intelligence ─────────────────────────────────────────
     anomaly_result = detect_anomalies(indicators_df)
     regime_result = detect_regime(indicators_df)
     regime_alert = get_regime_alert(regime_result)
@@ -134,29 +161,64 @@ def run_single_stock_analysis(ticker, hist_period):
     options_intel = compute_options_intelligence(indicators_df)
     deriv_sentiment = compute_derivatives_sentiment(hist_df)
 
-    # Summary cards row 1
-    s1, s2, s3, s4 = st.columns(4)
-    s1.metric("Current Price", f"₹{current_price:,.2f}")
-    s2.metric("Signal", signal_info["signal"])
-    s3.metric("Regime", regime_result["current_regime"])
-    s4.metric("Trade Quality", f"{latest.get('SMA20', 0):.0f}")
+    # Trade Quality (fixed: was displaying SMA20 value)
+    sma_diff = (latest.get("SMA20", 0) - latest.get("SMA50", 0)) / latest.get("SMA50", 1) if latest.get("SMA50", 0) > 0 else 0
+    tq_dict = compute_trade_quality_score(
+        sma_diff=sma_diff,
+        rsi=latest.get("RSI", 50),
+        volume=latest.get("Volume", 0),
+        avg_volume=indicators_df["Volume"].rolling(20).mean().iloc[-1] if "Volume" in indicators_df.columns else 1,
+        atr=latest.get("ATR", 0),
+        price=current_price,
+    )
 
-    # Summary cards row 2
-    s5, s6, s7, s8 = st.columns(4)
-    wr = reliability.get("win_rate")
-    s5.metric("Setup", setup)
-    s6.metric("Win Rate", f"{wr*100:.1f}%" if wr is not None else "N/A")
-    s7.metric("Probability", f"{prob_result['probability']*100:.0f}%")
-    s8.metric("IV Regime", options_intel["iv_regime"])
+    # Phase 5: ML Signal Engine (replaces rule-based)
+    signal_info = ml_generate_signal(
+        indicators_df,
+        extra_signals={
+            "regime": regime_result.get("current_regime", "Unknown"),
+            "anomaly_score": anomaly_result.get("anomaly_score", 0),
+            "anomaly_class": anomaly_result.get("anomaly_class", "Normal"),
+            "trade_quality": tq_dict.get("overall_quality", 5.0),
+        },
+        ticker=ticker,
+        period=hist_period,
+    )
 
-    # Summary cards row 3
-    s9, s10, s11, s12 = st.columns(4)
-    s9.metric("Derivatives", deriv_sentiment["sentiment"])
-    s10.metric("OI Buildup", deriv_sentiment["buildup"])
-    s11.metric("Anomaly", anomaly_result["anomaly_class"])
-    s12.metric("Expected Move", f"±{move_result['expected_move_pct']}%")
+    # Phase 5: AI Recommendation Narrator
+    intel_context = build_intelligence_context(
+        ticker=ticker,
+        price=current_price,
+        signal_info=signal_info,
+        regime_result=regime_result,
+        prob_result=prob_result,
+        options_intel=options_intel,
+        deriv_sentiment=deriv_sentiment,
+        anomaly_result=anomaly_result,
+        reliability=reliability,
+        move_result=move_result,
+    )
+    ai_recommendation = get_recommendation(
+        context=intel_context,
+        provider=ai_provider,
+        api_key=ai_api_key,
+    )
 
-    st.markdown("---")
+    # ── Executive Summary V2 (Phase 5 redesign) ─────────────────────────
+    render_executive_summary_v2(
+        ticker=ticker,
+        price=current_price,
+        signal_info=signal_info,
+        regime_result=regime_result,
+        prob_result=prob_result,
+        options_intel=options_intel,
+        deriv_sentiment=deriv_sentiment,
+        anomaly_result=anomaly_result,
+        reliability=reliability,
+        move_result=move_result,
+        ai_recommendation=ai_recommendation,
+        trade_quality=tq_dict,
+    )
 
     # ── Price Action & Indicators ────────────────────────────────────────
     st.subheader("📊 Price Action & Indicators")
@@ -177,11 +239,15 @@ def run_single_stock_analysis(ticker, hist_period):
     # ── Signal & Recommendation ──────────────────────────────────────────
     col_sig, col_rec = st.columns(2)
     with col_sig:
-        st.subheader("⚡ Signal Engine")
+        st.subheader("⚡ ML Signal Engine")
         render_signal_card(signal_info)
     with col_rec:
-        st.subheader("💡 Recommendation")
-        st.markdown(signal_info.get("recommendation", "No recommendation available."))
+        st.subheader("💡 AI Recommendation")
+        narrative = ai_recommendation.get("full_narrative", "")
+        if narrative:
+            st.markdown(narrative)
+        else:
+            st.markdown(signal_info.get("recommendation", "No recommendation available."))
 
     st.markdown("---")
 
@@ -208,11 +274,12 @@ def run_single_stock_analysis(ticker, hist_period):
 
     with ai3:
         st.markdown("#### 📊 Signal Reliability")
+        wr = reliability.get("win_rate")
         st.metric("Win Rate", f"{wr*100:.1f}%" if wr is not None else "N/A")
         st.caption(reliability.get("explanation", ""))
 
     # Probability row
-    pr1, pr2 = st.columns(2)
+    pr1, pr2, pr3 = st.columns(3)
     with pr1:
         st.markdown("#### 🎯 Setup Probability")
         st.metric("Success Probability", f"{prob_result['probability']*100:.1f}%")
@@ -222,6 +289,15 @@ def run_single_stock_analysis(ticker, hist_period):
         st.markdown("#### 📐 Expected Move (5-Day)")
         st.metric("Move Range", f"±{move_result['expected_move_pct']}%")
         st.caption(move_result["explanation"])
+    with pr3:
+        st.markdown("#### 🎖️ Trade Quality")
+        st.metric("Overall Score", f"{tq_dict['overall_quality']:.1f}/10")
+        st.caption(
+            f"Trend: {tq_dict['trend_strength']:.0f} | "
+            f"Momentum: {tq_dict['momentum']:.0f} | "
+            f"Volume: {tq_dict['volume_confirmation']:.0f} | "
+            f"Volatility: {tq_dict['volatility_quality']:.0f}"
+        )
 
     st.markdown("---")
 
@@ -304,7 +380,7 @@ elif mode == "Market Scanner":
 
     debug_mode = st.sidebar.checkbox("Scanner Debug Mode", value=False)
 
-    with st.spinner("Scanning market..."):
+    with st.spinner("Scanning market…"):
         scan_results, scan_logs, scan_failed = scan_market(period=hist_period)
 
     if debug_mode:
@@ -337,11 +413,12 @@ elif mode == "Market Scanner":
 
         # Breadth metrics
         breadth = calculate_breadth(scan_results)
-        col1, col2, col3, col4 = st.columns(4)
+        col1, col2, col3, col4, col5 = st.columns(5)
         col1.metric("Advancing / Declining", breadth.get("Advancing vs Declining"))
         col2.metric("Bullish %", f"{breadth.get('Bullish %')}%")
         col3.metric("Bearish %", f"{breadth.get('Bearish %')}%")
-        col4.metric("Participation", f"{adv_breadth.get('participation_rate', 0)}%")
+        col4.metric("Neutral", breadth.get("Neutral Count", 0))
+        col5.metric("Participation", f"{adv_breadth.get('participation_rate', 0)}%")
 
         st.markdown("---")
 
@@ -352,10 +429,12 @@ elif mode == "Market Scanner":
         for i, (idx, row) in enumerate(top_3.iterrows()):
             if i < 3:
                 with cols[i]:
+                    method_badge = "🤖 ML" if row.get("Method") == "ml_ensemble" else "📏 RB"
                     st.markdown(f"""
                     ### {row['Stock']}
                     **Score:** {row['Opportunity Score']}  
                     *{row['Conviction']}*  
+                    **Signal:** {row['Signal']} {method_badge}  
                     **Setup:** {row['Setup Type']}  
                     **Regime:** {row.get('Regime', 'N/A')}  
                     **Anomaly:** {row.get('Anomaly', 'N/A')}
@@ -364,13 +443,16 @@ elif mode == "Market Scanner":
 
         # Filters
         st.markdown("### 🛠️ Filters")
-        c1, c2, c3 = st.columns(3)
+        c1, c2, c3, c4 = st.columns(4)
         all_sectors = ["All"] + get_all_sectors()
         selected_sector = c1.selectbox("Filter by Sector", all_sectors)
         all_setups = ["All"] + list(scan_results["Setup Type"].unique())
         selected_setup = c2.selectbox("Filter by Setup Type", all_setups)
         all_regimes = ["All"] + list(scan_results["Regime"].unique()) if "Regime" in scan_results.columns else ["All"]
         selected_regime = c3.selectbox("Filter by Regime", all_regimes)
+        # New: filter by signal class
+        signal_classes = ["All"] + list(scan_results["Signal_Class"].unique()) if "Signal_Class" in scan_results.columns else ["All"]
+        selected_signal_class = c4.selectbox("Filter by Signal Class", signal_classes)
 
         filtered_df = scan_results.copy()
         if selected_sector != "All":
@@ -379,15 +461,23 @@ elif mode == "Market Scanner":
             filtered_df = filtered_df[filtered_df["Setup Type"] == selected_setup]
         if selected_regime != "All" and "Regime" in filtered_df.columns:
             filtered_df = filtered_df[filtered_df["Regime"] == selected_regime]
+        if selected_signal_class != "All" and "Signal_Class" in filtered_df.columns:
+            filtered_df = filtered_df[filtered_df["Signal_Class"] == selected_signal_class]
 
         # Tabs
         tab1, tab2, tab3, tab4 = st.tabs(["All Opportunities", "Bullish Setups", "Bearish Setups", "Anomalies"])
         with tab1:
             st.dataframe(filtered_df, use_container_width=True)
         with tab2:
-            st.dataframe(filtered_df[filtered_df["Signal"].str.contains("Bullish", na=False)], use_container_width=True)
+            if "Signal_Class" in filtered_df.columns:
+                st.dataframe(filtered_df[filtered_df["Signal_Class"] == "bullish"], use_container_width=True)
+            else:
+                st.dataframe(filtered_df[filtered_df["Signal"].str.contains("Bullish", na=False)], use_container_width=True)
         with tab3:
-            st.dataframe(filtered_df[filtered_df["Signal"].str.contains("Bearish", na=False)], use_container_width=True)
+            if "Signal_Class" in filtered_df.columns:
+                st.dataframe(filtered_df[filtered_df["Signal_Class"] == "bearish"], use_container_width=True)
+            else:
+                st.dataframe(filtered_df[filtered_df["Signal"].str.contains("Bearish", na=False)], use_container_width=True)
         with tab4:
             if "Anomaly" in filtered_df.columns:
                 anomaly_df = filtered_df[filtered_df["Anomaly"] == "Anomaly Detected"]

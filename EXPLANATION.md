@@ -15,200 +15,615 @@
 
 # 🟢 PART 1 — BEGINNER GUIDE
 
-*Everything you need to start using the app in under 5 minutes.*
+*Everything you need to start using the app in under 5 minutes — even if you've never traded a stock before.*
 
 ---
 
 ## 1. Quick Start — For First-Time Users
 
-### What Is This App?
+### What Is This App? (In One Sentence)
 
-This app helps **traders and investors** quickly understand the Indian stock market using:
+**This app is like a doctor's check-up for any Indian stock** — it examines the stock from every angle (price trends, AI analysis, derivatives data, historical testing) and gives you a clear health report so you can decide whether to buy, sell, or wait.
 
-- 📊 **Charts & indicators** — see price trends at a glance
-- ⚡ **Buy / sell signals** — the app tells you whether a stock looks bullish or bearish
-- 🎯 **Probabilities** — know the historical success rate of a setup before you trade
-- 🤖 **AI anomaly alerts** — the app flags unusual market behavior automatically
-- 📌 **Options intelligence** — understand volatility and derivatives positioning
-- 🧪 **Backtesting** — test whether a strategy actually worked in the past
-- 🔍 **Market scanner** — scan 50 stocks in one click to find the best opportunities
+### What Does It Actually Do?
+
+Think of it as a **personal stock research assistant** that does in 2 minutes what would normally take a professional analyst 2 hours:
+
+| What YOU want to know | What THE APP tells you |
+|---|---|
+| "Is this stock going up or down?" | 🟢 **Bullish** / 🔴 **Bearish** / 🟡 **Neutral** signal |
+| "Should I actually trust this signal?" | A **probability score** like 67% — meaning this type of setup has worked 67 out of 100 times in the past |
+| "Is anything weird happening?" | An **anomaly alert** if volume or volatility is unusually high |
+| "What phase is the market in?" | A **regime label** like "Trending Bullish" or "Consolidation" |
+| "Are big traders buying or selling?" | **Derivatives sentiment** — Long Buildup (buying) or Short Buildup (selling) |
+| "Which stock should I look at today?" | The **Market Scanner** ranks all 50 NIFTY stocks and shows you the top 3 |
 
 ### Who Is It For?
 
-- ✅ Beginners learning to trade Indian stocks
-- ✅ Active traders looking for faster analysis
-- ✅ Swing traders who need daily opportunity scans
-- ✅ Anyone who wants data-driven confidence before entering a trade
+- ✅ **Complete beginners** who want to understand stocks using data instead of tips
+- ✅ **Active traders** who want faster, more confident decisions
+- ✅ **Swing traders** who need a daily scan of the best opportunities
+- ✅ **Investors** who want to time their entries better
+- ✅ **Anyone** who is tired of guessing and wants numbers behind their decisions
 
-### How to Launch
+### How to Launch (Step by Step)
 
-1. Open a terminal / command prompt
-2. Navigate to the project folder
-3. Run:
+1. **Open a terminal / command prompt** on your computer
+   - On Windows: Press `Win + R`, type `cmd`, press Enter
+   - On Mac/Linux: Open the "Terminal" application
+2. **Navigate to the project folder:**
+   ```
+   cd "Indian Market & Derivatives Intelligence Terminal"
+   ```
+3. **Start the app:**
    ```
    streamlit run app.py
    ```
-4. The app opens in your browser automatically
+4. Your web browser opens automatically at `http://localhost:8501`
+5. You'll see the dashboard — **you're ready to go!**
 
-### Two Modes
+> 💡 **Tip:** If this is your first time, make sure you've already installed the required packages by running `pip install -r requirements.txt` before Step 3.
 
-Once the app loads you will see a sidebar on the left with two modes:
+### The Two Modes — Which One Should I Pick?
 
-| Mode | What it does |
-|------|-------------|
-| **Single Stock Analysis** | Deep-dive into one stock — signals, probabilities, options, backtest |
-| **Market Scanner** | Scan all 50 NIFTY stocks at once — find the best opportunities |
+When the app loads, you'll see a **sidebar on the left** with a radio button to choose your mode:
 
-Pick a mode and you're ready to go.
+| Mode | When to use it | Analogy |
+|------|---------------|---------|
+| **Single Stock Analysis** | When you already have a stock in mind and want a deep analysis | Like getting a full medical check-up for one patient |
+| **Market Scanner** | When you want to find the best stocks to trade today | Like screening 50 patients and finding the healthiest ones |
+
+**If you're new, start with Single Stock Analysis** — type `RELIANCE.NS` and explore.
 
 ---
 
 ## 2. Complete Beginner Walkthrough
 
-### Using Single Stock Analysis
+### Part A — Using Single Stock Analysis (Screen by Screen)
 
-**Step 1 — Search for a stock (with Autocomplete)**
-In the sidebar, start typing either the ticker symbol (e.g., `TCS`) or the company name (e.g., `Tata`). The app will dynamically search the Indian stock universe and show matching suggestions in a dropdown list. Selecting a suggestion automatically populates the input field.
+Here is exactly what you'll see on your screen, section by section, from top to bottom.
 
-* **How Autocomplete Works:** The search engine queries a built-in mapping of the NIFTY 50 and NIFTY 100 stock universes. It checks both tickers and company names case-insensitively, sorting results so exact ticker matches appear first.
-* **Easy Searching:** You don't need to memorize tickers like `HDFCBANK.NS`. Simply type `hdfc` or `bank`, and select the suggestion that matches your stock.
-* **Examples:**
-  * Typing `rel` -> Suggests `RELIANCE.NS - Reliance Industries Limited`
-  * Typing `tcs` -> Suggests `TCS.NS - Tata Consultancy Services Limited`
-  * Typing `hdfc` -> Suggests `HDFCBANK.NS - HDFC Bank Limited`
-  * Typing `infosys` -> Suggests `INFY.NS - Infosys Limited`
+---
 
-**Step 2 — Choose a time period**
-Pick how much history you want to analyze: 1 month, 3 months, 6 months, 1 year, or 2 years.
-For most swing trading, **6 months to 1 year** works best.
+#### 🔎 Step 1 — Search for a Stock (Sidebar)
 
-**Step 3 — Read the Executive Summary**
-This is the first thing you see — a row of cards showing:
-- Current price
-- Buy/sell signal
-- Market regime (trending, sideways, etc.)
-- Setup type (breakout, pullback, etc.)
-- Win rate, probability, IV regime, anomaly status
+**What you see:** A text input box at the top of the sidebar that says *"Search Ticker/Company (e.g. RELIANCE, TCS, HDFC)"*.
 
-*Think of it as a one-glance health check for the stock.*
+**What to do:** Start typing. You can type either:
+- A **ticker symbol** like `TCS` or `SBIN`
+- A **company name** like `Tata` or `State Bank`
 
-**Step 4 — Look at the chart**
-The candlestick chart shows price action with overlays like moving averages and Bollinger Bands. Green candles = price went up, red = price went down.
+**What happens:** A dropdown appears below the text box showing matching stocks. For example:
 
-**Step 5 — Check the Signal & Recommendation**
-The Signal Engine tells you:
-- **Bullish** = the indicators suggest the stock may go up
-- **Bearish** = the indicators suggest the stock may go down
-- **Neutral** = no strong direction detected
+| You type | Dropdown shows |
+|----------|---------------|
+| `rel` | `RELIANCE.NS - Reliance Industries Limited` |
+| `tcs` | `TCS.NS - Tata Consultancy Services Limited` |
+| `hdfc` | `HDFCBANK.NS - HDFC Bank Limited`, `HDFCLIFE.NS - HDFC Life Insurance Company Limited` |
+| `state` | `SBIN.NS - State Bank of India` |
+| `infosys` | `INFY.NS - Infosys Limited` |
+| `tata` | `TATAMOTORS.NS - Tata Motors Limited`, `TATASTEEL.NS - Tata Steel Limited` |
+| `bajaj` | `BAJFINANCE.NS - Bajaj Finance Limited`, `BAJAJFINSV.NS - Bajaj Finserv Limited`, `BAJAJ-AUTO.NS - Bajaj Auto Limited` |
+| `pharma` | `SUNPHARMA.NS - Sun Pharmaceutical Industries Limited` |
 
-Below that you get a plain-English recommendation.
+Click on the stock you want. The ticker gets selected automatically.
 
-**Step 6 — Review AI Intelligence**
-This section shows three cards:
-- **Anomaly Detection** — is anything unusual happening?
-- **Regime Detection** — what market phase are we in?
-- **Signal Reliability** — how often has this type of signal worked before?
+> 💡 **Tip:** You don't need to remember ticker codes! Typing any part of the company name works. Typing `bank` shows all banking stocks.
 
-**Step 7 — Check Options & Derivatives**
-You'll see IV (implied volatility), option prices, Greeks, and derivatives sentiment. Don't worry if these terms are new — there's a glossary at the bottom of this document.
+**Below the search box**, you'll see a dropdown for **Historical Period**:
 
-**Step 8 — Run a Backtest**
-Open the "Strategy Backtest" section. Adjust stop loss and target, then see how this setup performed historically — win rate, Sharpe ratio, and max drawdown.
+| Period | Meaning | Best for |
+|--------|---------|----------|
+| `1mo` | Last 1 month of data | Very short-term trades |
+| `3mo` | Last 3 months | Short-term swing trading |
+| `6mo` | Last 6 months | Medium-term analysis |
+| `1y` | Last 1 year *(default)* | Most common for swing trading |
+| `2y` | Last 2 years | Long-term trend analysis |
 
-### Using Market Scanner
+**Recommendation for beginners:** Leave it at `1y` (1 year). This gives enough history for reliable analysis.
 
-**Step 1 — Switch to Market Scanner**
-In the sidebar, select "Market Scanner."
+---
 
-**Step 2 — Pick a scan period**
-Choose how much history each stock should be analyzed over (e.g., 6 months).
+#### 📋 Step 2 — Read the AI Market Intelligence Summary (First Thing on Screen)
 
-**Step 3 — Wait for the scan**
-The app scans all 50 NIFTY stocks. This takes 30–90 seconds.
+**What you see:** A redesigned glassmorphism-styled summary with three sections:
 
-**Step 4 — Read the Intelligence Feed**
-At the top you'll see 2–4 short messages like:
-> 📈 Sector leadership concentrated in Financials.
-> ⚠ Narrow market participation (28% quality setups).
+**Section 1 — Signal Badge + Key Metrics (side by side):**
 
-These tell you the overall market mood before you look at individual stocks.
+On the **left**, you see a large colored badge showing the signal:
 
-**Step 5 — Check Top Opportunities**
-Three cards show the highest-scored stocks with their conviction level.
+| Signal | Color | Meaning |
+|--------|-------|---------|
+| 🟢 **Strong Bullish** | Green | Very strong buy signal — ML models agree |
+| 🔵 **Bullish Continuation** | Cyan | Uptrend likely to continue — trend is aligned |
+| 🟡 **Weak Bullish** | Light green | Mild bullish lean but trend structure is weak |
+| 🟡 **Neutral / Consolidation** | Yellow | No clear direction — wait for breakout |
+| 🟠 **Weak Bearish** | Light red | Mild bearish lean, not strong enough to short |
+| 🔴 **Bearish Breakdown** | Red | Downtrend with trend confirmation |
+| 🔴 **Strong Bearish** | Dark red | Very strong sell signal — ML models agree |
+| ⚠ **High Volatility / Uncertain** | Purple | Anomaly detected + high volatility — avoid trading |
 
-**Step 6 — Filter and explore**
-Use the dropdowns to filter by Sector, Setup Type, or Regime.
-Switch between tabs: All Opportunities, Bullish, Bearish, and Anomalies.
+Below the badge you'll see whether the signal was generated by the **ML Ensemble** (machine learning) or **Rule-Based** fallback engine.
 
-**Step 7 — Click into a stock**
-Found something interesting? Switch back to Single Stock Analysis mode and type that ticker to do a deep-dive.
+On the **right**, a metrics panel shows:
+
+| Metric | Example | What it tells you |
+|--------|---------|-------------------|
+| Bias | Strong Bullish | The overall directional bias |
+| Confidence | 72% | How confident the ML models are (with animated progress bar) |
+| Momentum | Strong | Whether momentum supports the signal |
+| Volatility | Stable | Current volatility regime |
+| Risk Level | Low / Moderate / High | Overall risk assessment |
+| Regime | Trending Bullish | What phase the market is in |
+
+**Section 2 — AI Key Insight (the blue card below):**
+
+This is the most important part — a **plain-English paragraph** that explains:
+- What the current situation is (e.g., "RELIANCE shows strong bullish momentum at ₹2,845.30 with 72% confidence")
+- **Best Use Case** — exactly what to do (e.g., "Momentum swing trading, 3-5 day hold")
+- **Warning** — what risk to watch (e.g., "Elevated volatility — consider wider stop losses")
+
+**Section 3 — Secondary Metric Pills (5 small cards):**
+
+| Pill | Example | What it tells you |
+|------|---------|-------------------|
+| Win Rate | 64.3% | How often this setup has worked historically |
+| Probability | 67% | Estimated chance of success right now |
+| IV Regime | Moderate IV | Whether options are cheap or expensive |
+| Derivatives | Bullish | Derivatives sentiment direction |
+| Exp. Move | ±2.8% | Expected 5-day price movement |
+
+> 🧠 **How to read the new summary in 5 seconds:**
+> 1. Look at the **signal badge color** — green = bullish, red = bearish, yellow = wait
+> 2. Read the **AI Key Insight** paragraph — it tells you everything in plain English
+> 3. Check the **confidence bar** — above 60% = worth acting on, below 45% = weak
+
+---
+
+#### 📊 Step 3 — Look at the Chart
+
+**What you see:** A large interactive candlestick chart with colored lines overlaid.
+
+**How to read it (for absolute beginners):**
+
+| Element | What it looks like | What it means |
+|---------|-------------------|---------------|
+| **Green candle** | A green rectangle | Price went UP during that day — the stock closed higher than it opened |
+| **Red candle** | A red rectangle | Price went DOWN during that day — the stock closed lower than it opened |
+| **Thin lines (wicks)** | Lines sticking out above/below each candle | The highest and lowest prices reached during the day |
+| **Blue line (SMA20)** | A smooth blue line | The average closing price over the last 20 days — shows short-term trend |
+| **Orange line (SMA50)** | A smooth orange line | The average closing price over the last 50 days — shows medium-term trend |
+| **Gray bands (Bollinger)** | Two gray lines forming a channel | A "normal range" — if price touches the upper band, it may be overbought; lower band, oversold |
+
+> 💡 **Simple rule:** If the blue line (SMA20) is ABOVE the orange line (SMA50) and both are going up → the stock is in an **uptrend**. If below and going down → **downtrend**.
+
+---
+
+#### ⚡ Step 4 — Check the ML Signal & AI Recommendation
+
+**What you see:** Two side-by-side panels.
+
+**Left panel — ML Signal Engine:**
+A rich signal card showing:
+- The **7-class signal** (e.g., "Strong Bullish", "Bearish Breakdown", "Neutral / Consolidation")
+- **Confidence bar** with percentage (animated fill)
+- **Probability breakdown** showing bullish / neutral / bearish percentages (e.g., ▲ 68% ● 22% ▼ 10%)
+- **Model Agreement** — how much the two ML models (RandomForest and GradientBoosting) agree
+- Badge showing whether it's **ML Ensemble** or **Rule-Based** (fallback for stocks with limited data)
+
+**Right panel — AI Recommendation:**
+A narrative paragraph generated by the AI Narrator, like:
+> *"RELIANCE shows strong bullish momentum at ₹2,845.30 with 72% confidence. The setup is supported by RSI momentum direction, trend structure, and volume expansion. Derivatives positioning (Long Buildup) confirms the directional bias."*
+>
+> *📌 Best Use Case: Momentum swing trading (3-5 day hold)*
+>
+> *⚠ Monitor for regime change and volume confirmation.*
+
+You can also expand the **"Signal Contributing Factors"** section to see exactly which features drove the ML signal:
+
+| Factor | Importance | Impact | Detail |
+|--------|-----------|--------|--------|
+| RSI Momentum Direction | 12.3% | 🟢 Positive | RSI rising over last 5 bars (+8.2) |
+| Trend Structure | 10.8% | 🟢 Positive | SMA20 1.023× above SMA50 |
+| Volume Expansion | 9.4% | 🟢 Positive | Volume 1.8× above 20-day average |
+| Volatility Level | 7.1% | 🔴 Negative | ATR at 2.9% of price — high |
+| 5-Day Momentum | 6.8% | 🟢 Positive | +4.2% over 5 days |
+
+> 💡 **What's new in Phase 5:** The old signal engine was rule-based (simple if/else scoring). The new ML engine uses machine learning trained on your stock's own price history to learn patterns, making signals much more accurate and less biased toward "Neutral".
+
+**Example — What a recommendation looks like for different signals:**
+
+| Signal | Example recommendation |
+|--------|----------------------|
+| 🟢 Bullish | "Bullish trend continuation detected. Price above SMA20 and SMA50 with strong volume. Consider entering a long position with a 3% stop loss." |
+| 🔴 Bearish | "Bearish momentum building. RSI declining below 45 with price below SMA20. Avoid fresh longs. Consider booking profits if already holding." |
+| 🟡 Neutral | "Market is consolidating. No strong directional cues. Wait for a breakout above Bollinger Upper or breakdown below Bollinger Lower before acting." |
+
+---
+
+#### 🤖 Step 5 — Review the AI Intelligence Panel
+
+**What you see:** Three cards in a row, followed by two more cards below.
+
+**Card 1 — 🔬 Anomaly Detection**
+
+| What it shows | Example | What it means in plain English |
+|--------------|---------|-------------------------------|
+| Anomaly Class | **Normal** | "Nothing unusual is happening. The stock is behaving as expected." |
+| Anomaly Class | **Anomaly Detected** | "Something unusual is happening — maybe volume spiked 3x, or the price moved way more than normal. Investigate!" |
+| Anomaly Score | 23 | A number from 0 to 100. Higher = more unusual. Below 50 is usually normal. |
+
+> 🏥 **Analogy:** It's like a smoke detector. "Normal" = no smoke. "Anomaly Detected" = smoke detected — go check if there's a fire (it might just be toast).
+
+**Card 2 — 🌡️ Regime Detection**
+
+| Regime shown | What it means | What you should do |
+|-------------|---------------|-------------------|
+| **Trending Bullish** | Stock has been going up steadily | Good for buying dips (pullback entries) |
+| **Trending Bearish** | Stock has been going down steadily | Avoid buying. Wait for reversal signals |
+| **Consolidation** | Stock is moving sideways in a narrow range | Wait for a breakout before acting |
+| **High Volatility Expansion** | Big swings in both directions | Use wider stop losses. Trade smaller sizes |
+| **Sideways** | No clear trend, random movement | Best to skip this stock and find a trending one |
+
+It also shows if a **transition** just happened (e.g., "Consolidation → Trending Bullish"). Transitions are valuable because they signal a new phase is beginning.
+
+> 🏥 **Analogy:** Think of it like weather forecasting. "Trending Bullish" = sunny weather, great for outdoor plans. "High Volatility" = storm warning, stay cautious.
+
+**Card 3 — 📊 Signal Reliability**
+
+| What it shows | Example | What it means |
+|--------------|---------|---------------|
+| Win Rate | **64.3%** | "Out of all the times this type of setup appeared in the past, 64.3% of them made money" |
+| Explanation | "Trend Continuation setups have historically delivered positive returns 64% of the time with an average gain of 1.8%." | Full context about how reliable this setup has been |
+
+> 🏥 **Analogy:** It's like checking a restaurant's rating before eating there. Win Rate 65%+ = "this restaurant usually delivers good food." Below 50% = "mixed reviews — proceed with caution."
+
+**Card 4 — 🎯 Setup Probability**
+
+| What it shows | Example | What it means |
+|--------------|---------|---------------|
+| Success Probability | **67%** | "Based on history AND current conditions, there's about a 67% chance this trade works" |
+| Confidence Band | 57% – 77% | "The true probability is likely somewhere in this range" |
+| Explanation | "Base hit rate 60% + volume confirmation (+3%) + trend alignment (+4%) = 67%" | How the app calculated the number |
+
+> 💡 **Key difference:** Win Rate looks at history alone. Probability adjusts for what's happening RIGHT NOW (volume, momentum, trend strength). Probability is more useful for your current decision.
+
+**Card 5 — 📐 Expected Move**
+
+| What it shows | Example | What it means |
+|--------------|---------|---------------|
+| Move Range | **±2.8%** | "Over the next 5 trading days, the stock is expected to move about 2.8% up or down" |
+
+This helps you set realistic stop losses and targets.
+
+---
+
+#### 📌 Step 6 — Check Options & Derivatives Intelligence
+
+**What you see:** Three cards in a row (IV Analysis, Option Pricing, Greeks), then two cards below (Derivatives Sentiment, Max Pain).
+
+**Don't panic if these terms are new.** Here's what matters for a beginner:
+
+**IV Analysis (Most Important for Beginners):**
+
+| What it shows | Example | Plain English |
+|--------------|---------|---------------|
+| IV Estimate | 28.5% | "The market expects this stock to move about 28.5% per year" |
+| IV Percentile | 72% | "Options are more expensive than usual (72% of the time in the past year, options were cheaper than today)" |
+| IV Regime | Moderate IV | A label: Very Low / Low / Moderate / High |
+
+> 💡 **Simple rule:** IV Percentile above 80% = options are expensive (good time to sell options). Below 20% = options are cheap (good time to buy options). In between = normal.
+
+**Derivatives Sentiment (Very Useful):**
+
+| What it shows | Example | Plain English |
+|--------------|---------|---------------|
+| Sentiment | Bullish | "Overall derivatives data supports a bullish view" |
+| PCR Proxy | 0.85 | Put-Call Ratio — below 1 is bullish, above 1 is bearish |
+| OI Buildup | Long Buildup | "Big traders are adding new buying positions" |
+| Max Pain | ₹2,800 | "The price where option sellers lose the least — price often gravitates here near expiry" |
+
+**The four types of OI Buildup explained with examples:**
+
+| Buildup type | What's happening | Real-world analogy |
+|-------------|-----------------|-------------------|
+| **Long Buildup** | Price rising + new positions being created | "People are buying concert tickets because they expect the show to be great" |
+| **Short Buildup** | Price falling + new positions being created | "People are betting against the concert — they think it'll be cancelled" |
+| **Short Covering** | Price rising + positions being closed | "People who bet against the concert are now panicking and buying tickets" |
+| **Long Unwinding** | Price falling + positions being closed | "People who bought tickets are selling them — they've lost confidence" |
+
+---
+
+#### 🧪 Step 7 — Run a Backtest
+
+**What you see:** An expandable section titled "Run Backtest for Current Setup." Click to open it.
+
+**What you'll configure:**
+
+| Setting | What it means | Example | Recommendation |
+|---------|--------------|---------|----------------|
+| Holding Period | How many days to hold the trade | 5 bars | 5–10 for swing trading |
+| Stop Loss % | Maximum loss before auto-exit | 3% | 2–4% for most stocks |
+| Target % | Profit target before auto-exit | 5% | 4–8% for swing trades |
+
+**What you'll see after running:**
+
+| Metric | Example | What it means in plain English |
+|--------|---------|-------------------------------|
+| Total Trades | 23 | "The app found 23 instances of this setup in the past year" |
+| Win Rate | 60.9% | "14 out of 23 trades were profitable" |
+| Avg Return | 1.45% | "On average, each trade made 1.45% profit" |
+| Sharpe Ratio | 1.32 | "The risk-adjusted return is good (above 1.0 is decent, above 2.0 is excellent)" |
+| Max Drawdown | -8.2% | "The worst losing streak resulted in an 8.2% drop from peak" |
+| Expectancy | 0.72% | "On average, you can expect to make 0.72% per trade over many trades" |
+| Profit Factor | 1.85 | "For every ₹1 lost, you gained ₹1.85. Above 1.0 means profitable." |
+| Sortino Ratio | 1.65 | "Like Sharpe, but only penalizes downside — higher is better" |
+
+> 💡 **The one number that matters most:** If **Win Rate > 50%** AND **Profit Factor > 1.0** AND **Expectancy > 0** → the strategy has historically been profitable. Not guaranteed to work in the future, but it's a positive sign.
+
+---
+
+#### 📂 Step 8 — Raw Data (Optional)
+
+**What you see:** A table showing the last 20 days of raw price data (Open, High, Low, Close, Volume).
+
+This is for advanced users who want to verify the numbers themselves. **Beginners can skip this section entirely.**
+
+---
+
+### Part B — Using Market Scanner (Screen by Screen)
+
+#### 🔎 Step 1 — Switch to Market Scanner
+
+In the sidebar, click "Market Scanner" in the mode selector. Then pick a scan period (e.g., `6mo`).
+
+You'll also see a checkbox: **"Scanner Debug Mode"**. Leave this OFF unless something goes wrong.
+
+#### ⏳ Step 2 — Wait for the Scan
+
+You'll see a spinner saying "Scanning market..." — this takes 30–90 seconds.
+
+**What's happening behind the scenes:** The app is downloading data for all 50 NIFTY stocks, computing 10+ indicators for each one, running anomaly detection on each one, classifying regimes, scoring each stock, and ranking them. All automatically.
+
+#### 📡 Step 3 — Read the Intelligence Feed
+
+**What you see:** 2–4 short messages at the top in quote boxes. Examples:
+
+> 📈 *"Market participation healthy at 62% — broad-based strength."*
+
+> ⚠ *"Sector leadership concentrated in Financial Services. IT sector lagging."*
+
+> 🔄 *"Breadth divergence detected — index rising but majority of stocks bearish."*
+
+**What these mean:**
+
+| Message type | What it tells you |
+|-------------|-------------------|
+| "Participation at 62%" | 62% of the 50 stocks have decent setups — the market is broadly strong |
+| "Participation at 22%" | Only 22% have decent setups — strength is concentrated in a few stocks, be careful |
+| "Sector leadership in Financials" | Bank/finance stocks are performing best right now |
+| "Breadth divergence" | The NIFTY index is going up, but most individual stocks are going down — this is a warning sign |
+
+#### 📊 Step 4 — Check Breadth Metrics
+
+**What you see:** Four cards showing:
+
+| Metric | Example | What it means |
+|--------|---------|---------------|
+| Advancing / Declining | 32 / 18 | "32 stocks are bullish, 18 are bearish" |
+| Bullish % | 64% | "64% of scanned stocks show bullish signals" |
+| Bearish % | 36% | "36% of scanned stocks show bearish signals" |
+| Participation | 58% | "58% of stocks have trade quality above 5.0 — meaning more than half the market has reasonable setups" |
+
+> 💡 **Simple interpretation:** Bullish % above 60% = strong market. Below 40% = weak market. In between = mixed.
+
+#### 🏆 Step 5 — Check Top 3 Opportunities
+
+**What you see:** Three card-style panels showing the best-ranked stocks. Example:
+
+| Card | Stock | Score | Conviction | Setup | Regime |
+|------|-------|-------|-----------|-------|--------|
+| #1 | BAJFINANCE.NS | 8.4 | ⭐⭐⭐⭐ Elite | Breakout | Trending Bullish |
+| #2 | TATAMOTORS.NS | 7.6 | ⭐⭐⭐ High | Trend Continuation | Trending Bullish |
+| #3 | SUNPHARMA.NS | 7.1 | ⭐⭐⭐ High | Pullback | Trending Bullish |
+
+**How to use this:** The #1 stock has the strongest overall setup. Consider switching to Single Stock Analysis to analyze it in detail before trading.
+
+#### 🛠️ Step 6 — Filter and Explore
+
+**What you see:** Three dropdown filters + four tabs.
+
+**Filters:**
+
+| Filter | Use it to... | Example |
+|--------|-------------|---------|
+| Sector | See only stocks from one sector | "Financial Services" to see only bank stocks |
+| Setup Type | See only stocks with a specific pattern | "Breakout" to see only stocks breaking out |
+| Regime | See only stocks in a specific market phase | "Trending Bullish" to see only stocks in uptrends |
+
+**Tabs:**
+
+| Tab | What it shows |
+|-----|--------------|
+| **All Opportunities** | Every scanned stock, ranked by score |
+| **Bullish Setups** | Only stocks with bullish signals |
+| **Bearish Setups** | Only stocks with bearish signals |
+| **Anomalies** | Only stocks where something unusual is happening |
+
+> 💡 **Beginner tip:** Start with the "Bullish Setups" tab if you want to buy, or the "Anomalies" tab to find interesting situations.
 
 ---
 
 ## 3. Real End-to-End Examples
 
-### Example 1: RELIANCE.NS
+### Example 1: RELIANCE.NS — A Strong Buy Setup
 
-Suppose you type `RELIANCE.NS` in the sidebar. Here's what you might see:
+**Scenario:** You type `rel` in the sidebar. The dropdown shows `RELIANCE.NS - Reliance Industries Limited`. You select it.
 
-| Card | Value | What it means |
-|------|-------|---------------|
-| Signal | **Bullish** | Indicators suggest upward momentum |
-| Regime | **Trending Bullish** | The stock has been in an uptrend |
-| Setup | **Trend Continuation** | The existing uptrend looks likely to continue |
-| Probability | **67%** | Historically, this setup succeeds about 67% of the time |
-| Anomaly | **Normal** | Nothing unusual — price action is within historical norms |
-| IV Regime | **Moderate IV** | Options are neither cheap nor expensive |
-| Derivatives | **Long Buildup** | Rising price with rising volume — fresh buying |
+**What the AI Summary shows:**
 
-**What a trader might do:**
-"Signal is bullish, trend is intact, probability is 67%, derivatives confirm long buildup. This looks like a reasonable buy setup. I'll check the backtest to see if the win rate holds and set a stop loss at 3%."
+| Section | What you see | What it means |
+|---------|-------------|---------------|
+| **Signal Badge** | 🟢 **Strong Bullish** (ML Ensemble) | The ML engine is confident this stock is going up |
+| **Confidence** | 72% (green bar) | High confidence — both ML models agree |
+| **Momentum** | Strong | Multiple momentum indicators confirm the move |
+| **Risk Level** | Low | Few risk factors present |
+| **Regime** | Trending Bullish | The stock has been going up for a while |
 
-### Example 2: TCS.NS
+**AI Key Insight:**
+> *"RELIANCE shows strong bullish momentum at ₹2,845.30 with 72% confidence. The setup is supported by RSI momentum direction, trend structure, and volume expansion. Derivatives positioning (Long Buildup) and trending bullish regime confirm the directional bias."*
+>
+> *📌 Best Use Case: Momentum swing trading (3-5 day hold)*
+>
+> *⚠ Monitor for regime change and volume confirmation.*
 
-| Card | Value | What it means |
-|------|-------|---------------|
-| Signal | **Neutral** | No strong directional signal |
-| Regime | **Consolidation** | Stock is moving sideways |
-| Setup | **Consolidation** | Tight range, waiting for breakout |
-| Anomaly | **Anomaly Detected** | Volume is unusually high for a consolidation phase |
+**Secondary Pills:** Win Rate 64.3% | Probability 67% | IV Moderate | Derivatives Bullish | Exp. Move ±2.8%
 
-**What a trader might do:**
-"The stock is consolidating but the anomaly engine flagged unusual volume. This could mean a breakout is coming. I'll add it to my watchlist and wait for a directional signal before entering."
+**What you'd check next:**
 
-### Example 3: HDFCBANK.NS
+1. **Contributing Factors** — Expand to see which ML features drove the signal (RSI rising, volume expanding, trend aligned)
+2. **Chart** — Confirm the uptrend visually: green candles, SMA20 above SMA50, price above both
+3. **Backtest** — Set 3% stop loss, 5% target, 5-day holding. See if Win Rate > 55% and Profit Factor > 1.0
+4. **AI Recommendation** — The narrative already gives you a specific trading strategy
 
-| Card | Value | What it means |
-|------|-------|---------------|
-| Signal | **Bearish** | Indicators point downward |
-| Regime | **Trending Bearish** | Stock has been falling |
-| Derivatives | **Short Buildup** | Falling price + rising volume = fresh shorting |
-| Probability | **38%** | This setup has a low historical success rate for longs |
+**Decision:** "ML Signal is Strong Bullish with 72% confidence, probability is 67%, derivatives confirm Long Buildup, anomaly is Normal. The contributing factors show RSI momentum, trend structure, and volume are all positive. I'll enter with a 3% stop loss below today's low."
 
-**What a trader might do:**
-"Everything is bearish — signal, regime, derivatives. Probability of a bounce is only 38%. I'll avoid buying and look for opportunities elsewhere."
+---
+
+### Example 2: TCS.NS — A Watchlist Situation
+
+**Scenario:** You type `tcs`, select `TCS.NS - Tata Consultancy Services Limited`.
+
+**What the Executive Summary shows:**
+
+| Card | Value | What it means for you |
+|------|-------|----------------------|
+| Signal | 🟡 **Neutral** | No strong direction — the app can't confidently say buy or sell |
+| Regime | **Consolidation** | The stock is stuck in a narrow range, moving sideways |
+| Setup | **Consolidation** | Tight price range — a breakout (up or down) may happen soon |
+| Probability | **48%** | Nearly a coin flip — not great odds for a trade |
+| Anomaly | ⚠ **Anomaly Detected** | Volume is unusually high for a stock that's going nowhere — something might be brewing |
+| OI Buildup | **Long Buildup** | Despite the flat price, someone is quietly accumulating buy positions |
+
+**What this means:** The stock itself isn't moving, but two things are interesting: (1) the anomaly alert says volume is unusual, and (2) OI shows long buildup. This might mean big players are positioning for an upside breakout.
+
+**Decision:** "I won't buy yet because the signal is Neutral and probability is only 48%. But I'll add TCS to my watchlist. If the signal turns Bullish and price breaks above the Bollinger Upper Band, I'll re-analyze."
+
+---
+
+### Example 3: HDFCBANK.NS — A Clear Avoid
+
+**Scenario:** You type `hdfc`, select `HDFCBANK.NS - HDFC Bank Limited`.
+
+**What the Executive Summary shows:**
+
+| Card | Value | What it means for you |
+|------|-------|----------------------|
+| Signal | 🔴 **Bearish** | The app thinks the stock is likely to go down |
+| Regime | **Trending Bearish** | The stock has been falling consistently |
+| Setup | **Trend Continuation** | The downtrend looks like it will continue |
+| Probability | **38%** | Only a 38% chance of a bounce — history says this usually keeps falling |
+| Derivatives | **Bearish** | Derivatives data agrees — bearish positioning |
+| OI Buildup | **Short Buildup** | Big traders are opening new short (sell) positions |
+
+**Decision:** "Everything lines up bearish — signal, regime, derivatives, OI buildup. Probability of a recovery is only 38%. I'll stay away from buying this stock right now. I might look for a short opportunity or simply focus on other stocks."
+
+---
+
+### Example 4: INFY.NS — A Full Deep-Dive Walkthrough
+
+This example walks through EVERY section of the dashboard, exactly as you would see it.
+
+**Scenario:** You type `infosys`, select `INFY.NS - Infosys Limited`, period = 1 year.
+
+**📋 Executive Summary:**
+
+| Card | Value |
+|------|-------|
+| Current Price | ₹1,565.80 |
+| Signal | 🟢 Bullish |
+| Regime | Trending Bullish |
+| Trade Quality | 6.8 |
+| Setup | Pullback |
+| Win Rate | 61.5% |
+| Probability | 63% |
+| IV Regime | Low IV |
+| Derivatives | Bullish |
+| OI Buildup | Short Covering |
+| Anomaly | Normal |
+| Expected Move | ±2.1% |
+
+*First impression: Bullish signal with 63% probability. Setup is a Pullback in an uptrend — this is a classic buy-the-dip situation.*
+
+**📊 Chart observations:**
+- Price is above SMA20 and SMA50 — uptrend confirmed
+- Price recently dipped to touch SMA20 — this is the "pullback"
+- Price is bouncing back up from SMA20 — the dip is being bought
+
+**⚡ Signal & Recommendation:**
+- Signal: "Bullish" with 0.72 confidence
+- Recommendation: "Pullback to moving average in uptrend. Price holding SMA20 support with RSI recovering from 42 to 55. Consider long entry near current levels with stop loss below SMA50."
+
+**🤖 AI Intelligence:**
+- Anomaly: Normal (score 18) — "No unusual patterns detected"
+- Regime: "Trending Bullish" for 45 bars — stable, long-running uptrend
+- Reliability: Win rate 61.5% — "Pullback setups in Infosys have worked about 6 out of 10 times"
+- Probability: 63% — "Base rate 58% + volume recovery (+2%) + trend alignment (+3%)"
+- Expected Move: ±2.1% over 5 days
+
+**📌 Options & Derivatives:**
+- IV: 22.3% (IV Percentile 28%) — options are cheap right now
+- OI Buildup: Short Covering — "Traders who bet against Infosys are buying back, driving the price up"
+- Max Pain: ₹1,550 — price is slightly above max pain, supportive
+
+**🧪 Backtest (5-day hold, 3% SL, 5% target):**
+- Total Trades: 18
+- Win Rate: 61.1%
+- Sharpe: 1.15
+- Max Drawdown: -6.8%
+- Expectancy: 0.65%
+- Profit Factor: 1.62
+
+**Final Decision:**
+"This is a solid pullback entry in an established uptrend. Signal is bullish (63% probability), the dip is being bought, short covering confirms, options are cheap (good for buying calls if interested). Backtest shows 61% win rate with 1.62 profit factor. I'll buy near ₹1,565 with a stop loss at ₹1,520 (below SMA50) and a target of ₹1,640 (about 5% up)."
 
 ---
 
 ## 4. Daily Workflow — How a Trader Uses the App
 
-Here's a practical morning routine:
+### The 2-Minute Morning Routine
 
-| Step | Action | Time |
-|------|--------|------|
-| 1 | Open the app → Switch to **Market Scanner** | 10 sec |
-| 2 | Read the **Intelligence Feed** — understand the market mood | 15 sec |
-| 3 | Check **breadth metrics** — are most stocks bullish or bearish? | 10 sec |
-| 4 | Look at **Top 3 Opportunities** — which stocks have highest scores? | 15 sec |
-| 5 | Filter by your favorite sector if needed | 5 sec |
-| 6 | Switch to **Single Stock Analysis** for the top pick | 10 sec |
-| 7 | Read the **Executive Summary** — 12 metrics at a glance | 15 sec |
-| 8 | Check **probability** and **signal reliability** | 10 sec |
-| 9 | Check **derivatives sentiment** — does OI confirm the setup? | 10 sec |
-| 10 | Run a **backtest** — has this strategy worked before? | 15 sec |
-| 11 | Make your trading decision with confidence | — |
+Here's exactly what an experienced user does every morning:
 
-**Total time: ~2 minutes** from opening the app to making an informed decision.
+| Step | Action | What you're looking for | Time |
+|------|--------|------------------------|------|
+| 1 | Open app → **Market Scanner** mode | — | 10 sec |
+| 2 | Read the **Intelligence Feed** | "Is the market broadly strong or weak today?" | 15 sec |
+| 3 | Check **Breadth Metrics** | "Are most stocks bullish (>60%) or bearish?" | 10 sec |
+| 4 | Look at **Top 3 Opportunities** | "Which stocks have the highest scores?" | 15 sec |
+| 5 | Filter by your sector if needed | "What's the best IT stock? Best bank stock?" | 5 sec |
+| 6 | Switch to **Single Stock Analysis** for the top pick | — | 10 sec |
+| 7 | Read the **Executive Summary** | "Signal + Probability + Derivatives — do they agree?" | 15 sec |
+| 8 | Check **Probability & Reliability** | "Is this above 55%? Has this setup worked before?" | 10 sec |
+| 9 | Check **Derivatives Sentiment** | "Does OI buildup confirm? Is it Long Buildup or Short Buildup?" | 10 sec |
+| 10 | Run a **Backtest** | "Win Rate > 50%? Profit Factor > 1.0? Positive Expectancy?" | 15 sec |
+| 11 | Make your decision | Buy / Sell / Wait / Add to Watchlist | — |
+
+**Total time: ~2 minutes.**
+
+### Decision Checklist
+
+Before making any trade, check these 5 boxes:
+
+- [ ] **Signal is Bullish or Bearish** (not Neutral — Neutral means "wait")
+- [ ] **Probability is above 55%** (below 50% is a coin flip)
+- [ ] **Derivatives sentiment agrees** with the signal direction
+- [ ] **Backtest Win Rate is above 50%** and Profit Factor above 1.0
+- [ ] **Anomaly status is Normal** (if Anomaly Detected, investigate before acting)
+
+If all 5 check out → high-confidence trade.
+If 3–4 check out → moderate confidence, use smaller position size.
+If fewer than 3 → skip this stock, find a better one.
 
 ---
 
@@ -216,131 +631,249 @@ Here's a practical morning routine:
 
 ### Signal Colors
 
-| Color / Icon | Meaning |
-|-------------|---------|
-| 🟢 **Bullish** | Indicators point upward — potential buy opportunity |
-| 🔴 **Bearish** | Indicators point downward — potential sell or avoid |
-| 🟡 **Neutral** | No strong direction — wait for clarity |
+| Color / Icon | Meaning | What to do |
+|-------------|---------|-----------|
+| 🟢 **Bullish** | Indicators point upward — potential buy opportunity | Consider buying if probability is also above 55% |
+| 🔴 **Bearish** | Indicators point downward — potential sell or avoid | Avoid buying. If you already own the stock, consider exiting |
+| 🟡 **Neutral** | No strong direction — wait for clarity | Do nothing. Add to watchlist and check again tomorrow |
 
-### Conviction Levels
+### Conviction Levels (Scanner Only)
 
-| Level | Score | What it means |
-|-------|-------|---------------|
-| ⭐⭐⭐⭐ **Elite Setup** | 8.0+ | Extremely strong opportunity across all factors |
-| ⭐⭐⭐ **High Conviction** | 6.5–7.9 | Strong opportunity worth acting on |
-| ⭐⭐ **Moderate** | 5.0–6.4 | Decent setup but not the strongest |
-| ⭐ **Weak** | Below 5.0 | Poor alignment — better opportunities exist |
+| Level | Score | What it means | What to do |
+|-------|-------|---------------|-----------|
+| ⭐⭐⭐⭐ **Elite Setup** | 8.0+ | Best-of-the-best opportunity | Analyze immediately — these are rare |
+| ⭐⭐⭐ **High Conviction** | 6.5–7.9 | Strong opportunity worth acting on | Prioritize for deep-dive analysis |
+| ⭐⭐ **Moderate** | 5.0–6.4 | Decent setup but not the strongest | Analyze only if no Elite/High options exist |
+| ⭐ **Weak** | Below 5.0 | Poor alignment — better opportunities exist | Skip — look for higher-ranked stocks |
 
 ### Probability Scores
 
-| Range | Label | What it means |
-|-------|-------|---------------|
-| 70%+ | ✅ High Probability | History strongly supports this setup |
-| 50–69% | ⚠ Moderate Probability | Reasonable but not certain |
-| Below 50% | ❌ Low Probability | History suggests this setup often fails |
+| Range | Label | What it means | Example analogy |
+|-------|-------|---------------|----------------|
+| 70%+ | ✅ High Probability | History strongly supports this setup | "This restaurant has a 4.5-star rating — very likely to be good" |
+| 50–69% | ⚠ Moderate Probability | Reasonable but not certain | "3.5 stars — probably fine, but don't get your hopes too high" |
+| Below 50% | ❌ Low Probability | History suggests this setup often fails | "2 stars — most people had a bad experience here" |
 
 ### Anomaly Alerts
 
-| Status | What it means |
-|--------|---------------|
-| **Normal** | Price action is within historical norms — nothing unusual |
-| **Anomaly Detected** | Something statistically rare is happening — investigate further |
+| Status | What it means | What to do |
+|--------|---------------|-----------|
+| **Normal** | Price action is within historical norms | Proceed with your analysis normally |
+| **Anomaly Detected** | Something statistically rare is happening | Investigate WHY — check volume, news, events. Don't trade blindly on anomalies |
 
-*Anomalies are NOT buy/sell signals. They are "pay attention" alerts.*
+> ⚠ **Important:** Anomalies are NOT buy/sell signals. They are "something unusual is happening — pay attention" alerts. An anomaly could mean a great opportunity OR a dangerous trap. Always investigate.
 
-### Risk & Reliability
+### Risk & Reliability Labels
 
-| Label | What it means |
-|-------|---------------|
-| ✅ **High Reliability** | This setup type has won 65%+ of the time historically |
-| ⚠ **Moderate Reliability** | 50–65% historical win rate — use with additional confirmation |
-| ❌ **Low Reliability** | Below 50% — this setup frequently fails |
+| Label | Win Rate | What it means | What to do |
+|-------|----------|---------------|-----------|
+| ✅ **High Reliability** | 65%+ | This setup type usually works | Trade with normal confidence |
+| ⚠ **Moderate Reliability** | 50–65% | Works more often than not, but not consistently | Use smaller position sizes or wait for additional confirmation |
+| ❌ **Low Reliability** | Below 50% | This setup frequently fails | Avoid this setup or wait for much stronger confirmation |
 
 ---
 
 ## 6. AI & ML — Explained Simply
 
-The app uses four "smart engines" behind the scenes. Here's what each one does in plain English:
+The app uses four "smart engines" behind the scenes. Here's what each one does in plain English, with real-world analogies:
 
 ### 🔬 Anomaly Detection
-**What it does:** Looks at volume, volatility, and momentum and asks: *"Is today's behavior normal or unusual compared to the last few months?"*
-**How it helps:** If a stock suddenly has 3× normal volume while moving sideways, something may be about to happen. The anomaly engine flags it so you can investigate.
+
+**What it does:** Examines three things — volume, volatility, and momentum — and compares today's values to the last 3–6 months. If today looks very different from "normal," it raises an alert.
+
+**Real-world analogy:** Imagine you track how many customers visit your shop each day. You normally get 100 visitors. One day, 350 visitors show up. That's an anomaly. It might be great (sale going viral) or bad (a flash mob causing chaos). Either way, you need to pay attention.
+
+**Example in the app:**
+- TATASTEEL.NS normally trades 5 million shares per day
+- Today it traded 18 million shares — 3.6× normal
+- The anomaly engine flags: "Anomaly Detected — Score 78"
+- **Your action:** Check if there's news (earnings, government policy, merger). The anomaly itself doesn't tell you the direction — just that something is happening.
 
 ### 🌡️ Regime Detection
-**What it does:** Classifies the market into phases — *trending up, trending down, consolidating, or volatile*.
-**How it helps:** Strategies that work in a trending market fail in a sideways market. Knowing the regime helps you pick the right approach.
+
+**What it does:** Looks at the trend direction (moving averages), volatility (ATR), and momentum (RSI) to classify the market into one of five phases.
+
+**Real-world analogy:** Think of seasons. A farmer needs to know whether it's planting season (Trending Bullish), harvest season (may be nearing the top), or winter (Trending Bearish). You use different strategies in different seasons.
+
+**Example in the app:**
+- MARUTI.NS shows SMA20 > SMA50 and both rising, RSI is 62, ATR is moderate
+- Regime: "Trending Bullish" (has been in this regime for 38 bars)
+- **Your action:** In Trending Bullish, look for pullback entries (buy dips). Avoid selling short.
 
 ### 📊 Signal Reliability
-**What it does:** Looks back through history and counts how many times the same type of setup (breakout, pullback, etc.) led to a profit.
-**How it helps:** Instead of guessing, you get a concrete win rate like "this setup has worked 68% of the time."
+
+**What it does:** Looks backward through 6–12 months of data, finds every time the same setup type appeared, and counts how many of those led to a profit within 5 days.
+
+**Real-world analogy:** Before trying a new restaurant, you read reviews. "147 people tried this dish; 94 liked it (64% approval)." That's exactly what signal reliability does for trading setups.
+
+**Example in the app:**
+- Setup type: "Breakout"
+- The app found 21 past breakout setups in BAJFINANCE.NS over the last year
+- 14 of those 21 were profitable within 5 days
+- Win Rate: 66.7%
+- **Your action:** A 66.7% win rate is solid. This setup type is reliable for this stock.
 
 ### 🎯 Probability Engine
-**What it does:** Combines historical win rate with current conditions (volume, momentum, trend alignment) to estimate the probability of success *right now*.
-**How it helps:** Two breakouts can look the same on a chart, but one has strong volume and trend alignment (72% probability) while the other doesn't (45%). The engine tells you which is which.
+
+**What it does:** Starts with the historical win rate and then adjusts it based on what's happening right now:
+- Is volume above average? (+2–3% boost)
+- Is the trend strong? (+2–4% boost)
+- Is momentum aligned? (+1–3% boost)
+- Is volatility normal? (no adjustment or small penalty)
+
+**Real-world analogy:** A weather forecast starts with the historical average ("July in Delhi is usually hot") and adjusts based on current conditions ("but today there's cloud cover, so it'll be slightly cooler"). The probability engine does the same for stock setups.
+
+**Example in the app:**
+- Base win rate for Pullback setups: 58%
+- Current volume is 1.5× average: +3%
+- SMA20 > SMA50 and both rising: +4%
+- RSI at 55 (healthy, not overbought): +2%
+- Final probability: 67%
+- Confidence band: 57% – 77%
+- **Your action:** 67% is well above the 55% minimum threshold. This is a trade worth taking.
 
 ---
 
 ## 7. What Should I Look At First?
 
-If you're overwhelmed by all the information, here's a simple priority guide:
+### If You're Overwhelmed — The Priority Pyramid
+
+```
+                    ┌─────────┐
+                    │ SIGNAL  │  ← Look at this FIRST
+                    │  + PROB │     (5 seconds)
+                   ┌┴─────────┴┐
+                   │ DERIVATIVES│  ← Does smart money agree?
+                   │ SENTIMENT  │     (10 seconds)
+                  ┌┴────────────┴┐
+                  │   BACKTEST    │  ← Has this worked before?
+                  │   RESULTS    │     (15 seconds)
+                 ┌┴──────────────┴┐
+                 │  CHART + REGIME │  ← Visual confirmation
+                 │  + INDICATORS   │     (30 seconds)
+                ┌┴────────────────┴┐
+                │ OPTIONS + RAW DATA│  ← Deep dive (optional)
+                └──────────────────┘
+```
 
 ### For Single Stock Analysis
 
-| Priority | Section | Why |
-|----------|---------|-----|
-| 1st | **Executive Summary** | Get the full picture in 5 seconds |
-| 2nd | **Signal & Recommendation** | Know the direction and action |
-| 3rd | **Probability & Reliability** | Know if the setup is trustworthy |
-| 4th | **Derivatives Sentiment** | Does smart money confirm the setup? |
-| 5th | **Backtest** | Has this actually worked before? |
-| Optional | Chart, indicators, raw data | Only if you want to dig deeper |
+| Priority | Section | Time needed | What to look for |
+|----------|---------|-------------|-----------------|
+| 1st | **Executive Summary** | 5 sec | Signal + Probability + Derivatives — do they agree? |
+| 2nd | **Signal & Recommendation** | 10 sec | Read the plain-English recommendation |
+| 3rd | **Probability & Reliability** | 10 sec | Probability above 55%? Win Rate above 50%? |
+| 4th | **Derivatives Sentiment** | 10 sec | Is OI Buildup confirming the signal direction? |
+| 5th | **Backtest** | 15 sec | Win Rate > 50% + Profit Factor > 1.0 + Positive Expectancy? |
+| Optional | Chart, indicators, raw data | 30+ sec | Only if you want visual confirmation or deeper analysis |
 
 ### For Market Scanner
 
-| Priority | Section | Why |
-|----------|---------|-----|
-| 1st | **Intelligence Feed** | Understand the market mood |
-| 2nd | **Top 3 Opportunities** | See the best setups instantly |
-| 3rd | **Breadth Metrics** | Is the market broadly strong or weak? |
-| 4th | **Anomalies Tab** | See if any stock has unusual behavior |
-| Optional | Filters, full table | Explore specific sectors or setups |
+| Priority | Section | Time needed | What to look for |
+|----------|---------|-------------|-----------------|
+| 1st | **Intelligence Feed** | 10 sec | Is the market strong or weak overall? |
+| 2nd | **Top 3 Opportunities** | 10 sec | Which stocks scored highest? What's their conviction level? |
+| 3rd | **Breadth Metrics** | 10 sec | Bullish % above 55%? Participation above 50%? |
+| 4th | **Anomalies Tab** | 10 sec | Any stocks flagged with unusual behavior worth investigating? |
+| Optional | Filters, full table | 30+ sec | Explore specific sectors or setup types |
 
 ### The 30-Second Rule
 
-If you only have 30 seconds:
-1. Look at the **signal** (Bullish / Bearish / Neutral)
-2. Look at the **probability** (above or below 50%?)
-3. Look at the **conviction** (Elite / High / Moderate / Weak)
+If you truly have only 30 seconds, look at THREE things:
 
-These three numbers tell you 80% of what you need to know.
+1. 🚦 **Signal** — Bullish, Bearish, or Neutral?
+2. 🎯 **Probability** — Above or below 55%?
+3. 📊 **Derivatives Sentiment** — Does it confirm the signal?
+
+If all three agree → strong opportunity.
+If they disagree → skip and look at another stock.
 
 ---
 
 ## 8. Frequently Asked Questions
 
+### Getting Started
+
 **Q: Do I need to know coding to use this app?**
-A: No. Just run `streamlit run app.py` once, and everything works in your browser. No coding needed to analyze stocks.
+A: No. Just run `streamlit run app.py` once, and everything works in your browser. You don't need to write any code. If you can use Google, you can use this app.
 
-**Q: Is this app giving me guaranteed trading advice?**
-A: No. This app provides *data-driven analysis and historical probabilities*. All trading involves risk. The probabilities are estimates based on past data — they are not guarantees.
-
-**Q: What does "Anomaly Detected" mean? Should I buy?**
-A: An anomaly means something *statistically unusual* is happening. It could be bullish or bearish. It's a prompt to investigate further, not a direct buy/sell signal.
-
-**Q: Why does the scanner take time?**
-A: The scanner fetches live data for 50 stocks from Yahoo Finance, computes indicators, runs ML models, and scores each stock. This takes 30–90 seconds depending on your internet speed.
+**Q: Do I need to know about stock markets?**
+A: Basic knowledge helps (what buying/selling means, what a stock price is), but this guide explains everything you'll see on screen. You'll learn as you explore.
 
 **Q: What stock exchange does this app cover?**
-A: It covers stocks listed on the **NSE (National Stock Exchange)** of India. Tickers end with `.NS` (e.g., `RELIANCE.NS`).
+A: It covers stocks listed on the **NSE (National Stock Exchange)** of India. All tickers end with `.NS` (e.g., `RELIANCE.NS`).
 
-**Q: Can I add my own stocks to the scanner?**
-A: The scanner currently scans the NIFTY 50 universe. The stock list is defined in `src/data/universe.py` and can be customized.
+### Understanding the App
 
-**Q: What does IV Percentile mean in simple terms?**
-A: It tells you whether options are *cheap or expensive* right now compared to the past year. High IV Percentile (80%+) = expensive options. Low IV Percentile (20% or less) = cheap options.
+**Q: Is this app giving me guaranteed trading advice?**
+A: No. This app provides *data-driven analysis and historical probabilities*. Think of it as a very smart research assistant, not a crystal ball. All trading involves risk. Past performance does not guarantee future results.
+
+**Q: What does "Anomaly Detected" mean? Should I immediately buy or sell?**
+A: No! An anomaly means something *statistically unusual* is happening — like abnormally high volume. It could be bullish (institutional buying) or bearish (panic selling). It's a prompt to investigate further, not a direct trading signal. Check the news, check the chart, then decide.
 
 **Q: What's the difference between Signal and Probability?**
-A: The **signal** tells you the *direction* (bullish or bearish). The **probability** tells you *how likely* that direction is to play out based on historical data. A bullish signal with 45% probability is much weaker than one with 75%.
+A: Great question.
+- The **Signal** tells you the *direction* → "The stock looks bullish"
+- The **Probability** tells you *how confident to be* → "And there's a 67% chance this works out"
+- A bullish signal with 45% probability is MUCH weaker than one with 75%
+- **Always check both.** Direction without confidence is guessing.
+
+**Q: What does "Regime" mean? Why should I care?**
+A: The regime tells you *what kind of market you're in*. It matters because different strategies work in different regimes:
+- In a **Trending** market → buy pullbacks, ride the trend
+- In a **Consolidation** → wait for breakout, don't chase
+- In a **High Volatility** regime → use wider stops, trade smaller
+- Trying to buy breakouts in a sideways market will lose money. Regime awareness prevents that.
+
+**Q: What does IV Percentile mean in simple terms?**
+A: It tells you whether options are *cheap or expensive* right now compared to the past year.
+- IV Percentile 80%+ → options are expensive (they cost more than 80% of the past year's prices)
+- IV Percentile 20% or less → options are cheap
+- For beginners: if you're buying options, cheaper is better. If selling options, more expensive is better.
+
+### Using the Scanner
+
+**Q: Why does the scanner take 30–90 seconds?**
+A: The scanner does a LOT of work for each of the 50 stocks:
+1. Downloads live price data from Yahoo Finance
+2. Computes 10+ technical indicators
+3. Runs the anomaly detection ML model
+4. Classifies the market regime
+5. Scores and ranks the stock
+That's 250+ computations per stock × 50 stocks = 12,500+ calculations. Speed depends on your internet connection.
+
+**Q: Can I add my own stocks to the scanner?**
+A: Yes! The stock list is defined in `src/data/universe.py`. You can add any NSE-listed stock by adding its Yahoo Finance ticker (like `TATACHEM.NS`) to the `NIFTY_50_STOCKS` list.
+
+**Q: The scanner shows "No scan results available." What do I do?**
+A: Enable **"Scanner Debug Mode"** in the sidebar. This shows detailed logs of what failed. Common causes:
+- Internet connection issues (Yahoo Finance couldn't be reached)
+- All stocks failed to download (temporary Yahoo Finance outage)
+- Try again after a minute
+
+### Making Decisions
+
+**Q: How do I know if a setup is worth trading?**
+A: Use the 5-box checklist from Section 4:
+1. Signal is Bullish or Bearish (not Neutral)
+2. Probability is above 55%
+3. Derivatives sentiment agrees
+4. Backtest shows Win Rate > 50% and Profit Factor > 1.0
+5. Anomaly status is Normal
+If 4–5 boxes are checked → go for it. If fewer than 3 → skip.
+
+**Q: What's a good stop loss to use?**
+A: For most Indian large-cap stocks (NIFTY 50):
+- **Swing trades (5–10 days):** 2–4% stop loss
+- **Short-term (1–3 days):** 1–2% stop loss
+- **Position trades (weeks):** 5–8% stop loss
+The "Expected Move" card in the Executive Summary helps — set your stop loss slightly wider than the expected move.
+
+**Q: Should I trust the backtest results?**
+A: Backtest results show what WOULD have happened if you traded this setup in the past. They're useful because:
+- If a setup lost money historically, it'll probably lose money again
+- If a setup made money historically, it has a reasonable (but not guaranteed) chance of working again
+- More trades in the backtest = more reliable results (20+ trades is good, fewer than 10 is shaky)
 
 ---
 ---
@@ -919,6 +1452,43 @@ An **Institutional AI-Assisted Indian Market & Derivatives Intelligence Terminal
 | **Position Sizing** | Determining how many shares to buy based on risk tolerance and stop loss distance. |
 | **Risk-per-Trade** | The maximum percentage of capital risked on a single trade (typically 1–2%). |
 | **Drawdown Probability** | The estimated likelihood of experiencing a given percentage loss. |
+
+### ML Signal Engine (Phase 5)
+
+| Term | Definition |
+|------|------------|
+| **ML Signal Engine** | An ensemble machine learning classifier that replaces the rule-based signal system. Uses RandomForest + GradientBoosting models trained on each stock's own price history. |
+| **Feature Engineering Pipeline** | The process of extracting 22+ quantitative features from raw OHLCV + indicator data for ML model input. |
+| **Ensemble Classifier** | A technique that combines predictions from multiple models (RandomForest + GradientBoosting) to produce more accurate and robust signals. |
+| **Soft-Vote** | Averaging the probability outputs of multiple models rather than just their class predictions, resulting in smoother confidence scores. |
+| **7-Class Signal Taxonomy** | The expanded signal classification: Strong Bullish, Bullish Continuation, Weak Bullish, Neutral/Consolidation, Weak Bearish, Bearish Breakdown, Strong Bearish, and High Volatility/Uncertain. |
+| **Contributing Factors** | The top 5 ML features (by importance) that explain WHY a signal was generated, with human-readable descriptions. |
+| **Feature Importance** | A measure from the ML model showing how much each input feature contributed to the prediction. |
+| **Model Agreement** | How closely the RandomForest and GradientBoosting models agree on the predicted class probabilities (100% = perfect agreement). |
+| **Rule-Based Fallback** | The original rule-based signal engine that activates when insufficient data (<100 bars) is available for ML training. |
+| **Trend Alignment** | Whether the SMA20 > SMA50 structure supports the directional signal (used to distinguish "Continuation" from "Weak" signals). |
+
+### AI Recommendation Narrator (Phase 5)
+
+| Term | Definition |
+|------|------------|
+| **AI Narrator** | A module that interprets pre-computed analytics and generates human-readable market intelligence narratives. |
+| **Template Fallback** | A zero-cost, high-quality narrative generation system using predefined templates that requires no API key. Works offline. |
+| **LLM Provider** | An external AI service (Gemini, OpenAI, or Claude) that can generate richer narratives when an API key is provided. |
+| **Key Insight** | A 2-3 sentence AI-generated summary of the stock's current technical situation. |
+| **Best Use Case** | A specific, actionable trading strategy recommendation based on the signal class and momentum. |
+| **LLM Validation** | Safety checks that reject LLM outputs contradicting the analytics (e.g., an LLM saying "sell" when the signal is bullish). |
+| **Intelligence Context** | A structured dict assembling all analytics outputs for the narrator, without raw OHLCV data (safety measure). |
+
+### Executive Summary V2 (Phase 5)
+
+| Term | Definition |
+|------|------------|
+| **Glassmorphism** | A modern UI design style using translucent backgrounds, blur effects, and subtle borders for a premium look. |
+| **Signal Badge** | The large colored card on the left showing the 7-class signal, price, and engine method. |
+| **Confidence Bar** | An animated horizontal progress bar showing ML confidence percentage with gradient colors. |
+| **Metric Pills** | Small rounded cards showing secondary metrics (Win Rate, Probability, IV Regime, Derivatives, Expected Move). |
+| **Insight Card** | The narrative block below the signal badge containing Key Insight, Best Use Case, and Warning. |
 
 ### Architecture & Platform
 

@@ -14,7 +14,7 @@ import pandas as pd
 
 # Thresholds (can be tweaked later)
 RSI_OVERSOLD = 30
-RSI_OVERBORED = 70
+RSI_OVERBOUGHT = 70
 MACD_CROSS_THRESHOLD = 0
 VOLUME_SPIKE_MULTIPLIER = 1.5  # volume compared to 20‑day SMA volume
 ATR_VOLATILITY_THRESHOLD = 0.02  # relative to price
@@ -74,7 +74,7 @@ def generate_signals(df: pd.DataFrame) -> Dict[str, Any]:
         if rsi < RSI_OVERSOLD:
             score += 1
             reasons.append(f"RSI {rsi:.1f} indicates oversold conditions (bullish).")
-        elif rsi > RSI_OVERBORED:
+        elif rsi > RSI_OVERBOUGHT:
             score -= 1
             reasons.append(f"RSI {rsi:.1f} indicates overbought conditions (bearish).")
         else:
@@ -156,4 +156,9 @@ def generate_signals(df: pd.DataFrame) -> Dict[str, Any]:
         "confidence": confidence,
         "explanation": explanation,
         "recommendation": recommendation,
+        "method": "rule_based",
     }
+
+
+# Legacy alias for backward compatibility
+generate_signals_legacy = generate_signals

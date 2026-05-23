@@ -18,6 +18,7 @@ from data.nse_data import get_historical_data
 from analytics.indicators import compute_all_indicators
 from signals.rule_based import generate_signals
 from src.analytics.trade_quality import compute_trade_quality_score
+from src.analytics.ml_signal_engine import ml_generate_signal
 from src.data.universe import get_nifty50_symbols, get_stock_sector
 from src.data.market_context import fetch_index_history, relative_strength
 from src.analytics.ml_models import detect_anomalies
@@ -104,10 +105,17 @@ def scan_market(tickers: List[str] = DEFAULT_TICKERS, period: str = "6mo") -> Tu
             df_ind = compute_all_indicators(df)
             logs.append(f"[INFO] Indicators computed successfully")
             
-            # Generate signals
-            logs.append(f"[INFO] Generating signals for {ticker}...")
-            sig_dict = generate_signals(df_ind)
-            logs.append(f"[INFO] Signal: {sig_dict['signal']} (Confidence: {sig_dict['confidence']})")
+            # Generate signals (ML engine with rule-based fallback)
+            logs.append(f"[INFO] Generating ML signals for {ticker}...")
+            sig_dict = ml_generate_signal(
+                df_ind,
+                extra_signals={
+                    "regime": regime_info.get("current_regime", "Unknown") if 'regime_info' in dir() else "Unknown",
+                },
+                ticker=ticker,
+                period=period,
+            )
+            logs.append(f"[INFO] Signal: {sig_dict['signal']} (Confidence: {sig_dict['confidence']}, Method: {sig_dict.get('method', 'unknown')})")
             
             # Compute trade quality
             latest = df_ind.iloc[-1]
@@ -166,13 +174,16 @@ def scan_market(tickers: List[str] = DEFAULT_TICKERS, period: str = "6mo") -> Tu
                 "Stock": ticker,
                 "Sector": get_stock_sector(ticker),
                 "Signal": sig_dict["signal"],
+                "Signal_Class": sig_dict.get("signal_class", "neutral"),
                 "Confidence": sig_dict["confidence"],
+                "ML_Confidence": sig_dict["confidence"],
                 "Setup Type": setup_type,
                 "Trade Quality": tq_dict["overall_quality"],
                 "Relative Strength": round(rs, 2),
                 "Anomaly Score": anomaly_info["anomaly_score"],
                 "Anomaly": anomaly_info["anomaly_class"],
                 "Regime": regime_info["current_regime"],
+                "Method": sig_dict.get("method", "unknown"),
             })
             
         except Exception as e:
@@ -196,11 +207,14 @@ def scan_market(tickers: List[str] = DEFAULT_TICKERS, period: str = "6mo") -> Tu
     logs.append("[INFO] Calculating final opportunity scores and conviction...")
     def compute_final_score(row):
         tq = row["Trade Quality"] / 10.0
-        conf = row["Confidence"]
+        ml_conf = row.get("ML_Confidence", row["Confidence"])
         rs = min(row["Relative Strength"] / 2.0, 1.0)
         sec_str = sector_strength.get(row["Sector"], 5.0) / 10.0
+        anomaly_adj = 0.95 if row["Anomaly"] == "Anomaly Detected" else 1.0
         
-        score = (tq * 0.3) + (conf * 0.2) + (rs * 0.2) + (sec_str * 0.3)
+        # ML confidence is now the primary scoring factor
+        score = (ml_conf * 0.30) + (tq * 0.25) + (rs * 0.15) + (sec_str * 0.20) + (0.5 * 0.10)
+        score *= anomaly_adj
         return round(score * 10, 1)
         
     results_df["Opportunity Score"] = results_df.apply(compute_final_score, axis=1)
@@ -243,13 +257,20 @@ def calculate_breadth(results_df: pd.DataFrame) -> Dict[str, Any]:
         return {}
         
     total = len(results_df)
-    bullish = len(results_df[results_df["Signal"].str.contains("Bullish")])
-    bearish = len(results_df[results_df["Signal"].str.contains("Bearish")])
+    # Use Signal_Class for cleaner classification if available
+    if "Signal_Class" in results_df.columns:
+        bullish = len(results_df[results_df["Signal_Class"] == "bullish"])
+        bearish = len(results_df[results_df["Signal_Class"] == "bearish"])
+    else:
+        bullish = len(results_df[results_df["Signal"].str.contains("Bullish")])
+        bearish = len(results_df[results_df["Signal"].str.contains("Bearish")])
+    neutral = total - bullish - bearish
     
     return {
         "Total Stocks": total,
         "Bullish Count": bullish,
         "Bearish Count": bearish,
+        "Neutral Count": neutral,
         "Bullish %": round(bullish / total * 100, 1) if total else 0,
         "Bearish %": round(bearish / total * 100, 1) if total else 0,
         "Advancing vs Declining": f"{bullish} / {bearish}"
