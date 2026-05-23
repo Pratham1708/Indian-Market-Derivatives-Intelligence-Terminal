@@ -104,17 +104,20 @@ if mode == "Single Stock Analysis":
         help="Select an LLM provider for AI-powered narratives. 'None' uses high-quality templates (free, no API key)."
     )
     ai_api_key = ""
+    sidebar_status = None
     if ai_provider != "None (Template)":
         ai_api_key = st.sidebar.text_input(
             f"{ai_provider} API Key",
             type="password",
             help=f"Enter your {ai_provider} API key, or set it in a .env file."
         )
+        sidebar_status = st.sidebar.empty()
 
 else:
     hist_period = st.sidebar.selectbox("Scan Period", ["1mo", "3mo", "6mo", "1y", "2y"], index=2)
     ai_provider = "None (Template)"
     ai_api_key = ""
+    sidebar_status = None
 
 st.sidebar.markdown("---")
 st.sidebar.caption("Built with ❤️ using Streamlit & Python")
@@ -204,6 +207,19 @@ def run_single_stock_analysis(ticker, hist_period):
         api_key=ai_api_key,
     )
 
+    # Update sidebar LLM connection status dynamically
+    if sidebar_status:
+        mode_val = ai_recommendation.get("mode", "Template")
+        if mode_val == "LLM":
+            sidebar_status.success(f"🤖 Connected to {ai_provider}!")
+        elif "Fallback (Error:" in mode_val:
+            err_msg = mode_val.replace("Template Fallback (Error: ", "").replace(")", "")
+            sidebar_status.error(f"❌ {ai_provider} API Failed: {err_msg[:60]}...")
+        elif "Fallback" in mode_val:
+            sidebar_status.warning(f"⚠️ {mode_val}")
+        else:
+            sidebar_status.info("ℹ️ Running local templates (Free)")
+
     # ── Executive Summary V2 (Phase 5 redesign) ─────────────────────────
     render_executive_summary_v2(
         ticker=ticker,
@@ -243,6 +259,16 @@ def run_single_stock_analysis(ticker, hist_period):
         render_signal_card(signal_info)
     with col_rec:
         st.subheader("💡 AI Recommendation")
+        
+        # Show mode / status indicator
+        mode_val = ai_recommendation.get("mode", "Template")
+        if mode_val == "LLM":
+            st.caption(f"🟢 **Live {ai_provider} AI Narrator Active**")
+        elif "Fallback" in mode_val:
+            st.caption(f"🟠 **{mode_val}** (using local template)")
+        else:
+            st.caption("ℹ️ **Local Template Narrator Active** (No API Key)")
+
         narrative = ai_recommendation.get("full_narrative", "")
         if narrative:
             st.markdown(narrative)

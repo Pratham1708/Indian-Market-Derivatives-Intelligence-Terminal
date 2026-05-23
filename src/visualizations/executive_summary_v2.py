@@ -283,12 +283,10 @@ def render_executive_summary_v2(
 
     # ── Title + Accent Bar ───────────────────────────────────────────
     st.markdown(
-        f"""
-        <div style='margin-bottom:4px;'>
-            <h3 style='margin:0;color:#F0F2F6;'>📋 AI Market Intelligence Summary — {ticker}</h3>
-        </div>
-        <div class='accent-bar'></div>
-        """,
+        f"<div style='margin-bottom:4px;'>"
+        f"<h3 style='margin:0;color:#F0F2F6;'>📋 AI Market Intelligence Summary — {ticker}</h3>"
+        f"</div>"
+        f"<div class='accent-bar'></div>",
         unsafe_allow_html=True,
     )
 
@@ -298,22 +296,15 @@ def render_executive_summary_v2(
     with col_badge:
         method_label = "ML Ensemble" if method == "ml_ensemble" else "Rule-Based"
         st.markdown(
-            f"""
-            <div class='signal-badge' style='
-                background: {colors["bg"]};
-                border: 2px solid {colors["border"]};
-            '>
-                <div class='signal-label' style='color:{colors["text"]};'>
-                    {colors["emoji"]} {signal}
-                </div>
-                <div class='signal-price' style='color:{colors["text"]};'>
-                    ₹{price:,.2f}
-                </div>
-                <div class='signal-method'>
-                    {method_label}
-                </div>
-            </div>
-            """,
+            f"<div class='signal-badge' style='"
+            f"background:{colors['bg']};"
+            f"border:2px solid {colors['border']};'>"
+            f"<div class='signal-label' style='color:{colors['text']};'>"
+            f"{colors['emoji']} {signal}</div>"
+            f"<div class='signal-price' style='color:{colors['text']};'>"
+            f"₹{price:,.2f}</div>"
+            f"<div class='signal-method'>{method_label}</div>"
+            f"</div>",
             unsafe_allow_html=True,
         )
 
@@ -322,43 +313,37 @@ def render_executive_summary_v2(
         risk_clr = _risk_color(risk_level)
 
         st.markdown(
-            f"""
-            <div class='metrics-panel'>
-                <div class='metric-row'>
-                    <span class='metric-label'>📊 Bias</span>
-                    <span class='metric-value' style='color:{colors["text"]};'>{signal}</span>
-                </div>
-                <div class='metric-row'>
-                    <span class='metric-label'>🎯 Confidence</span>
-                    <span class='metric-value'>{conf_pct}%</span>
-                </div>
-                <div class='metric-row' style='border-bottom:none;padding-bottom:2px;'>
-                    <span></span><span></span>
-                </div>
-                <div class='conf-bar-container'>
-                    <div class='conf-bar-fill' style='
-                        width:{conf_pct}%;
-                        background:{colors["bar"]};
-                    '></div>
-                </div>
-                <div class='metric-row' style='margin-top:8px;'>
-                    <span class='metric-label'>⚡ Momentum</span>
-                    <span class='metric-value'>{momentum}</span>
-                </div>
-                <div class='metric-row'>
-                    <span class='metric-label'>🌡 Volatility</span>
-                    <span class='metric-value'>{vol_label}</span>
-                </div>
-                <div class='metric-row'>
-                    <span class='metric-label'>⚠ Risk Level</span>
-                    <span class='metric-value' style='color:{risk_clr};'>{risk_level}</span>
-                </div>
-                <div class='metric-row'>
-                    <span class='metric-label'>📈 Regime</span>
-                    <span class='metric-value'>{regime}</span>
-                </div>
-            </div>
-            """,
+            f"<div class='metrics-panel'>"
+            f"<div class='metric-row'>"
+            f"<span class='metric-label'>📊 Bias</span>"
+            f"<span class='metric-value' style='color:{colors['text']};'>{signal}</span>"
+            f"</div>"
+            f"<div class='metric-row'>"
+            f"<span class='metric-label'>🎯 Confidence</span>"
+            f"<span class='metric-value'>{conf_pct}%</span>"
+            f"</div>"
+            f"<div class='metric-row' style='border-bottom:none;padding-bottom:2px;'>"
+            f"<span></span><span></span></div>"
+            f"<div class='conf-bar-container'>"
+            f"<div class='conf-bar-fill' style='width:{conf_pct}%;background:{colors['bar']};'></div>"
+            f"</div>"
+            f"<div class='metric-row' style='margin-top:8px;'>"
+            f"<span class='metric-label'>⚡ Momentum</span>"
+            f"<span class='metric-value'>{momentum}</span>"
+            f"</div>"
+            f"<div class='metric-row'>"
+            f"<span class='metric-label'>🌡 Volatility</span>"
+            f"<span class='metric-value'>{vol_label}</span>"
+            f"</div>"
+            f"<div class='metric-row'>"
+            f"<span class='metric-label'>⚠ Risk Level</span>"
+            f"<span class='metric-value' style='color:{risk_clr};'>{risk_level}</span>"
+            f"</div>"
+            f"<div class='metric-row'>"
+            f"<span class='metric-label'>📈 Regime</span>"
+            f"<span class='metric-value'>{regime}</span>"
+            f"</div>"
+            f"</div>",
             unsafe_allow_html=True,
         )
 
@@ -368,14 +353,12 @@ def render_executive_summary_v2(
     warning = ai_recommendation.get("warning", "")
 
     st.markdown(
-        f"""
-        <div class='insight-card'>
-            <div class='insight-title'>💡 Key Insight</div>
-            <div class='insight-text'>{key_insight}</div>
-            <div class='use-case'>📌 Best Use Case: {best_use_case}</div>
-            <div class='warning'>⚠ {warning}</div>
-        </div>
-        """,
+        f"<div class='insight-card'>"
+        f"<div class='insight-title'>💡 Key Insight</div>"
+        f"<div class='insight-text'>{key_insight}</div>"
+        f"<div class='use-case'>📌 Best Use Case: {best_use_case}</div>"
+        f"<div class='warning'>⚠ {warning}</div>"
+        f"</div>",
         unsafe_allow_html=True,
     )
 
@@ -400,12 +383,10 @@ def render_executive_summary_v2(
     for col, label, value in pills:
         with col:
             st.markdown(
-                f"""
-                <div class='metric-pill'>
-                    <div class='pill-label'>{label}</div>
-                    <div class='pill-value'>{value}</div>
-                </div>
-                """,
+                f"<div class='metric-pill'>"
+                f"<div class='pill-label'>{label}</div>"
+                f"<div class='pill-value'>{value}</div>"
+                f"</div>",
                 unsafe_allow_html=True,
             )
 
@@ -421,3 +402,4 @@ def render_executive_summary_v2(
                 )
 
     st.markdown("---")
+

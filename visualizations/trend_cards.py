@@ -9,20 +9,6 @@ Updated for Phase 5: supports 7-class signal taxonomy.
 import streamlit as st
 
 
-def _confidence_bar(confidence: float, color: str) -> str:
-    """Return an HTML snippet for a horizontal confidence bar.
-    ``confidence`` should be between 0 and 1.
-    """
-    width_percent = int(confidence * 100)
-    bar_html = f"""
-    <div style='background:#2C2F36;height:12px;border-radius:6px;position:relative;'>
-        <div style='background:{color};width:{width_percent}%;height:100%;border-radius:6px;
-                     transition:width 0.6s ease-in-out;'></div>
-    </div>
-    """
-    return bar_html
-
-
 def render_signal_card(signal_info: dict) -> None:
     """Render a premium‑looking signal card.
 
@@ -60,20 +46,13 @@ def render_signal_card(signal_info: dict) -> None:
     elif method == "rule_based_fallback":
         method_label = "<span style='font-size:0.7rem;opacity:0.5;'>Rule-Based</span>"
 
-    # Model agreement
-    agreement_html = ""
-    agreement = signal_info.get("model_agreement", 0)
-    if agreement > 0:
-        agree_pct = int(agreement * 100)
-        agreement_html = f"""
-        <div style='margin-top:8px;'>
-            <span style='font-size:0.8rem;color:#9ca3af;'>Model Agreement: {agree_pct}%</span>
-            <div style='background:#2C2F36;height:6px;border-radius:3px;margin-top:3px;'>
-                <div style='background:{"#00E396" if agree_pct > 70 else "#FEB019"};
-                            width:{agree_pct}%;height:100%;border-radius:3px;'></div>
-            </div>
-        </div>
-        """
+    # Confidence bar
+    conf_pct = int(confidence * 100)
+    conf_bar = (
+        f"<div style='background:#2C2F36;height:12px;border-radius:6px;'>"
+        f"<div style='background:{badge_color};width:{conf_pct}%;height:100%;"
+        f"border-radius:6px;transition:width 0.6s ease-in-out;'></div></div>"
+    )
 
     # Probability breakdown
     probs_html = ""
@@ -82,30 +61,42 @@ def render_signal_card(signal_info: dict) -> None:
         bull_p = probs.get("bullish", 0) * 100
         neut_p = probs.get("neutral", 0) * 100
         bear_p = probs.get("bearish", 0) * 100
-        probs_html = f"""
-        <div style='margin-top:10px;display:flex;gap:12px;font-size:0.8rem;'>
-            <span style='color:#00E396;'>▲ {bull_p:.0f}%</span>
-            <span style='color:#FEB019;'>● {neut_p:.0f}%</span>
-            <span style='color:#FF4560;'>▼ {bear_p:.0f}%</span>
-        </div>
-        """
+        probs_html = (
+            f"<div style='margin-top:10px;display:flex;gap:12px;font-size:0.8rem;'>"
+            f"<span style='color:#00E396;'>▲ {bull_p:.0f}%</span>"
+            f"<span style='color:#FEB019;'>● {neut_p:.0f}%</span>"
+            f"<span style='color:#FF4560;'>▼ {bear_p:.0f}%</span>"
+            f"</div>"
+        )
 
-    # Card container
-    st.markdown(
-        f"""
-        <div style='background:#1A1D23;border:2px solid {badge_color};border-radius:12px;
-                     padding:18px;margin:12px 0;'>
-            <div style='display:flex;justify-content:space-between;align-items:center;'>
-                <h3 style='margin:0;color:{badge_color};'>{signal}</h3>
-                {method_label}
-            </div>
-            <p style='margin:8px 0;color:#F0F2F6;font-size:0.9rem;'>{explanation}</p>
-            <div>Confidence: {int(confidence * 100)}%</div>
-            {_confidence_bar(confidence, badge_color)}
-            {probs_html}
-            {agreement_html}
-        </div>
-        """,
-        unsafe_allow_html=True,
+    # Model agreement
+    agreement_html = ""
+    agreement = signal_info.get("model_agreement", 0)
+    if agreement > 0:
+        agree_pct = int(agreement * 100)
+        agree_color = "#00E396" if agree_pct > 70 else "#FEB019"
+        agreement_html = (
+            f"<div style='margin-top:8px;'>"
+            f"<span style='font-size:0.8rem;color:#9ca3af;'>Model Agreement: {agree_pct}%</span>"
+            f"<div style='background:#2C2F36;height:6px;border-radius:3px;margin-top:3px;'>"
+            f"<div style='background:{agree_color};width:{agree_pct}%;height:100%;border-radius:3px;'></div>"
+            f"</div></div>"
+        )
+
+    # Build full card HTML as a single compact string (no indentation)
+    card_html = (
+        f"<div style='background:#1A1D23;border:2px solid {badge_color};"
+        f"border-radius:12px;padding:18px;margin:12px 0;'>"
+        f"<div style='display:flex;justify-content:space-between;align-items:center;'>"
+        f"<h3 style='margin:0;color:{badge_color};'>{signal}</h3>"
+        f"{method_label}</div>"
+        f"<p style='margin:8px 0;color:#F0F2F6;font-size:0.9rem;'>{explanation}</p>"
+        f"<div>Confidence: {conf_pct}%</div>"
+        f"{conf_bar}"
+        f"{probs_html}"
+        f"{agreement_html}"
+        f"</div>"
     )
+
+    st.markdown(card_html, unsafe_allow_html=True)
 

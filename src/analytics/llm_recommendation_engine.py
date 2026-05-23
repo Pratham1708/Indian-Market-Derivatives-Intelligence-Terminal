@@ -481,7 +481,9 @@ def get_recommendation(
 
     # If no API key or template mode, use template fallback
     if provider == "None (Template)" or not api_key or api_key.strip() == "":
-        return _template_narrator(context)
+        res = _template_narrator(context)
+        res["mode"] = "Template"
+        return res
 
     # Build user prompt from context
     user_prompt = (
@@ -533,7 +535,9 @@ def get_recommendation(
         # Validate output
         if not _validate_llm_output(llm_output, context):
             logger.warning("LLM output failed validation — falling back to template.")
-            return _template_narrator(context)
+            res = _template_narrator(context)
+            res["mode"] = "Template Fallback (Validation Failed)"
+            return res
 
         # Merge LLM output with template-derived fields
         template_result = _template_narrator(context)
@@ -548,9 +552,12 @@ def get_recommendation(
             ),
             "risk_level": template_result["risk_level"],
             "momentum_label": template_result["momentum_label"],
+            "mode": "LLM",
         }
         return result
 
     except Exception as e:
         logger.error(f"LLM recommendation failed: {e}. Falling back to template.")
-        return _template_narrator(context)
+        res = _template_narrator(context)
+        res["mode"] = f"Template Fallback (Error: {str(e)})"
+        return res
