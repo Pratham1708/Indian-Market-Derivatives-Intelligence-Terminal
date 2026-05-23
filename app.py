@@ -212,11 +212,8 @@ def run_single_stock_analysis(ticker, hist_period):
         mode_val = ai_recommendation.get("mode", "Template")
         if mode_val == "LLM":
             sidebar_status.success(f"🤖 Connected to {ai_provider}!")
-        elif "Fallback (Error:" in mode_val:
-            err_msg = mode_val.replace("Template Fallback (Error: ", "").replace(")", "")
-            sidebar_status.error(f"❌ {ai_provider} API Failed: {err_msg[:60]}...")
         elif "Fallback" in mode_val:
-            sidebar_status.warning(f"⚠️ {mode_val}")
+            sidebar_status.warning(f"⚠️ {ai_provider} API limit/billing issue. Using fallback template.")
         else:
             sidebar_status.info("ℹ️ Running local templates (Free)")
 
@@ -265,7 +262,7 @@ def run_single_stock_analysis(ticker, hist_period):
         if mode_val == "LLM":
             st.caption(f"🟢 **Live {ai_provider} AI Narrator Active**")
         elif "Fallback" in mode_val:
-            st.caption(f"🟠 **{mode_val}** (using local template)")
+            st.caption("ℹ️ **Local Template Narrator Active** (API limit reached / using fallback)")
         else:
             st.caption("ℹ️ **Local Template Narrator Active** (No API Key)")
 

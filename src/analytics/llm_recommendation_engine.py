@@ -114,7 +114,7 @@ class OpenAIProvider(LLMProvider):
 class ClaudeProvider(LLMProvider):
     """Anthropic Claude API provider."""
 
-    def __init__(self, api_key: str, model: str = "claude-3-5-sonnet-latest"):
+    def __init__(self, api_key: str, model: str = "claude-3-5-haiku-latest"):
         self.api_key = api_key
         self.model = model
 
@@ -442,6 +442,9 @@ def _validate_llm_output(llm_output: dict, context: dict) -> bool:
 def _clean_error_message(e: Exception) -> str:
     """Format API exceptions into friendly, actionable user messages."""
     err_str = str(e)
+    # Check for credit balance / low funds / billing issues
+    if "credit balance" in err_str.lower() or "balance too low" in err_str.lower() or "billing" in err_str.lower() or "purchase credits" in err_str.lower():
+        return "Billing / credit balance too low. Please check your developer account billing details."
     # Check for quota / rate limits (429)
     if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str or "RateLimit" in err_str:
         return "Quota Exceeded / Rate Limit Reached (429). Please check your API billing or plan limits."
@@ -464,7 +467,7 @@ def _clean_error_message(e: Exception) -> str:
 
     # Generic short error
     if len(err_str) > 100:
-        return f"API Error: {err_str[:90]}..."
+        return "API Call Failed. Using local template fallback."
     return err_str
 
 
