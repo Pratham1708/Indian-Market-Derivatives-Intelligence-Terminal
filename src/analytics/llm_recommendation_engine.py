@@ -88,7 +88,7 @@ class GeminiProvider(LLMProvider):
 class OpenAIProvider(LLMProvider):
     """OpenAI API provider."""
 
-    def __init__(self, api_key: str, model: str = "gpt-4.1-mini"):
+    def __init__(self, api_key: str, model: str = "gpt-4o-mini"):
         self.api_key = api_key
         self.model = model
 
@@ -114,7 +114,7 @@ class OpenAIProvider(LLMProvider):
 class ClaudeProvider(LLMProvider):
     """Anthropic Claude API provider."""
 
-    def __init__(self, api_key: str, model: str = "claude-sonnet-4-20250514"):
+    def __init__(self, api_key: str, model: str = "claude-3-5-sonnet-latest"):
         self.api_key = api_key
         self.model = model
 
@@ -439,6 +439,35 @@ def _validate_llm_output(llm_output: dict, context: dict) -> bool:
     return True
 
 
+def _clean_error_message(e: Exception) -> str:
+    """Format API exceptions into friendly, actionable user messages."""
+    err_str = str(e)
+    # Check for quota / rate limits (429)
+    if "429" in err_str or "RESOURCE_EXHAUSTED" in err_str or "quota" in err_str or "RateLimit" in err_str:
+        return "Quota Exceeded / Rate Limit Reached (429). Please check your API billing or plan limits."
+    # Check for authentication / key issues (401)
+    if "401" in err_str or "UNAUTHENTICATED" in err_str or ("invalid" in err_str.lower() and "key" in err_str.lower()) or "auth" in err_str.lower():
+        return "Authentication Failed (401). Please verify your API Key."
+    # Check for model access / not found (404)
+    if "404" in err_str or ("model" in err_str.lower() and "not found" in err_str.lower()):
+        return "Model not found or unsupported model version (404)."
+    
+    # Nested message parsing from JSON client responses
+    if "'message':" in err_str:
+        try:
+            parts = err_str.split("'message':")
+            if len(parts) > 1:
+                subpart = parts[1].split(",")[0].strip().strip("'\"{}")
+                return f"API Error: {subpart}"
+        except Exception:
+            pass
+
+    # Generic short error
+    if len(err_str) > 100:
+        return f"API Error: {err_str[:90]}..."
+    return err_str
+
+
 # ── Main Recommendation Function ──────────────────────────────────────────
 
 def get_recommendation(
@@ -559,5 +588,6 @@ def get_recommendation(
     except Exception as e:
         logger.error(f"LLM recommendation failed: {e}. Falling back to template.")
         res = _template_narrator(context)
-        res["mode"] = f"Template Fallback (Error: {str(e)})"
+        clean_err = _clean_error_message(e)
+        res["mode"] = f"Template Fallback (Error: {clean_err})"
         return res
